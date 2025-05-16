@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Event Approval - KhEC Event Flow{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Event Details -->
+            <div class="card mb-4">
+                {% if event.image %}
+                    <img src="{{ event.image.url }}" class="card-img-top" alt="{{ event.title }}" style="max-height: 400px; object-fit: cover;">
+                {% else %}
+                    <img src="https://via.placeholder.com/800x400?text=Event" class="card-img-top" alt="{{ event.title }}">
+                {% endif %}
+                <div class="card-body">
+                    <h1 class="card-title">{{ event.title }}</h1>
+                    
+                    <div class="d-flex flex-wrap mb-3">
+                        <span class="badge bg-primary me-2 mb-2">{{ event.category.name }}</span>
+                        <span class="badge {% if event.status == 'approved' %}bg-success{% elif event.status == 'pending' %}bg-warning{% elif event.status == 'rejected' %}bg-danger{% else %}bg-secondary{% endif %} me-2 mb-2">
+                            {{ event.get_status_display }}
+                        </span>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <p class="card-text">
+                            <i class="fas fa-user me-2"></i>Organized by: {{ event.organizer.get_full_name|default:event.organizer.username }}
+                        </p>
+                        <p class="card-text">
+                            <i class="fas fa-map-marker-alt me-2"></i>{{ event.location }}
+                        </p>
+                        <p class="card-text">
+                            <i class="fas fa-calendar-alt me-2"></i>{{ event.start_date|date:"F j, Y" }}
+                            {% if event.start_date|date:"Y-m-d" != event.end_date|date:"Y-m-d" %}
+                                to {{ event.end_date|date:"F j, Y" }}
+                            {% endif %}
+                        </p>
+                        <p class="card-text">
+                            <i class="fas fa-clock me-2"></i>{{ event.start_date|date:"g:i A" }} - {{ event.end_date|date:"g:i A" }}
+                        </p>
+                        <p class="card-text">
+                            <i class="fas fa-users me-2"></i>
+                            {% if event.max_participants > 0 %}
+                                Maximum {{ event.max_participants }} participants
+                            {% else %}
+                                Unlimited participants
+                            {% endif %}
+                        </p>
+                        <p class="card-text">
+                            <i class="fas fa-hourglass-end me-2"></i>Registration deadline: {{ event.registration_deadline|date:"F j, Y g:i A" }}
+                        </p>
+                    </div>
+                    
+                    <div class="card-text mb-4">
+                        <h5>Description</h5>
+                        <p>{{ event.description|linebreaks }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <!-- Approval Form -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4>Event Approval</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        
+                        <div class="d-grid gap-2 mt-3">
+                            <button type="submit" name="status" value="approved" class="btn btn-success">
+                                <i class="fas fa-check-circle me-2"></i>Approve Event
+                            </button>
+                            <button type="submit" name="status" value="rejected" class="btn btn-danger">
+                                <i class="fas fa-times-circle me-2"></i>Reject Event
+                            </button>
+                            <a href="{% url 'admin-dashboard' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Organizer Info -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4>Organizer Information</h4>
+                </div>
+                <div class="card-body">
+                    <p><strong>Name:</strong> {{ event.organizer.get_full_name|default:event.organizer.username }}</p>
+                    <p><strong>Email:</strong> {{ event.organizer.email }}</p>
+                    <p><strong>Phone:</strong> {{ event.organizer.phone_number|default:"Not provided" }}</p>
+                    <p><strong>User Type:</strong> {{ event.organizer.get_user_type_display }}</p>
+                    <p><strong>Joined:</strong> {{ event.organizer.date_joined|date:"F j, Y" }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

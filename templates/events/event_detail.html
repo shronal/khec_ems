@@ -1,0 +1,244 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}{{ event.title }} - KhEC Event Flow{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Event Details -->
+            <div class="card mb-4">
+                {% if event.image %}
+                    <img src="{{ event.image.url }}" class="card-img-top" alt="{{ event.title }}" style="max-height: 400px; object-fit: cover;">
+                {% else %}
+                    <img src="https://via.placeholder.com/800x400?text=Event" class="card-img-top" alt="{{ event.title }}">
+                {% endif %}
+                <div class="card-body">
+                    <h1 class="card-title">{{ event.title }}</h1>
+                    
+                    <div class="d-flex flex-wrap mb-3">
+                        <span class="badge bg-primary me-2 mb-2">{{ event.category.name }}</span>
+                        <span class="badge {% if event.status == 'approved' %}bg-success{% elif event.status == 'pending' %}bg-warning{% elif event.status == 'rejected' %}bg-danger{% else %}bg-secondary{% endif %} me-2 mb-2">
+                            {{ event.get_status_display }}
+                        </span>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <p class="card-text">
+                            <i class="fas fa-user me-2"></i>Organized by: {{ event.organizer.get_full_name|default:event.organizer.username }}
+                        </p>
+                        <p class="card-text">
+                            <i class="fas fa-map-marker-alt me-2"></i>{{ event.location }}
+                        </p>
+                        <p class="card-text">
+                            <i class="fas fa-calendar-alt me-2"></i>{{ event.start_date|date:"F j, Y" }}
+                            {% if event.start_date|date:"Y-m-d" != event.end_date|date:"Y-m-d" %}
+                                to {{ event.end_date|date:"F j, Y" }}
+                            {% endif %}
+                        </p>
+                        <p class="card-text">
+                            <i class="fas fa-clock me-2"></i>{{ event.start_date|date:"g:i A" }} - {{ event.end_date|date:"g:i A" }}
+                        </p>
+                        <p class="card-text">
+                            <i class="fas fa-users me-2"></i>
+                            {% if event.max_participants > 0 %}
+                                {{ event.get_registered_count }} / {{ event.max_participants }} participants
+                            {% else %}
+                                {{ event.get_registered_count }} participants (unlimited capacity)
+                            {% endif %}
+                        </p>
+                        <p class="card-text">
+                            <i class="fas fa-hourglass-end me-2"></i>Registration deadline: {{ event.registration_deadline|date:"F j, Y g:i A" }}
+                        </p>
+                    </div>
+                    
+                    <div class="card-text mb-4">
+                        <h5>Description</h5>
+                        <p>{{ event.description|linebreaks }}</p>
+                    </div>
+                    
+                    <div class="d-flex flex-wrap justify-content-between">
+                        {% if can_register %}
+                            <a href="{% url 'event-register' event.pk %}" class="btn btn-success mb-2">
+                                <i class="fas fa-check-circle me-2"></i>Register for Event
+                            </a>
+                        {% elif is_registered %}
+                            <div>
+                                <span class="badge bg-success p-2 mb-2">
+                                    <i class="fas fa-check-circle me-1"></i>You are registered
+                                </span>
+                                {% if event.start_date > now %}
+                                    <a href="{% url 'cancel-registration' event.pk %}" class="btn btn-outline-danger btn-sm ms-2 mb-2">
+                                        Cancel Registration
+                                    </a>
+                                {% endif %}
+                            </div>
+                        {% elif event.status == 'approved' and not event.is_registration_open %}
+                            <span class="badge bg-secondary p-2 mb-2">
+                                <i class="fas fa-times-circle me-1"></i>Registration closed
+                            </span>
+                        {% elif event.status == 'approved' and not event.has_spots_left %}
+                            <span class="badge bg-secondary p-2 mb-2">
+                                <i class="fas fa-times-circle me-1"></i>Event is full
+                            </span>
+                        {% elif event.status != 'approved' %}
+                            <span class="badge bg-warning p-2 mb-2">
+                                <i class="fas fa-exclamation-circle me-1"></i>Event not yet approved
+                            </span>
+                        {% endif %}
+                        
+                        {% if user.is_authenticated and user == event.organizer or user.is_admin_user %}
+                            <div>
+                                <a href="{% url 'event-update' event.pk %}" class="btn btn-outline-primary mb-2 me-2">
+                                    <i class="fas fa-edit me-1"></i>Edit
+                                </a>
+                                <a href="{% url 'event-delete' event.pk %}" class="btn btn-outline-danger mb-2">
+                                    <i class="fas fa-trash-alt me-1"></i>Delete
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Feedback Section -->
+            {% if feedback %}
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h4>Participant Feedback</h4>
+                    </div>
+                    <div class="card-body">
+                        {% for fb in feedback %}
+                            <div class="mb-3 pb-3 {% if not forloop.last %}border-bottom{% endif %}">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <div>
+                                        <strong>{{ fb.user.get_full_name|default:fb.user.username }}</strong>
+                                        <small class="text-muted ms-2">{{ fb.created_at|date:"F j, Y" }}</small>
+                                    </div>
+                                    <div>
+                                        {% for i in "12345" %}
+                                            {% if forloop.counter <= fb.rating %}
+                                                <i class="fas fa-star text-warning"></i>
+                                            {% else %}
+                                                <i class="far fa-star text-warning"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <p class="mb-0">{{ fb.comment }}</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+            
+            <!-- Feedback Form -->
+            {% if is_registered and event.end_date < now and feedback_form %}
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h4>Leave Your Feedback</h4>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" action="{% url 'submit-feedback' event.pk %}">
+                            {% csrf_token %}
+                            {{ feedback_form|crispy }}
+                            <button type="submit" class="btn btn-primary">Submit Feedback</button>
+                        </form>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="col-lg-4">
+            <!-- Event Info Sidebar -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4>Event Information</h4>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <h5>Date & Time</h5>
+                        <p>
+                            <i class="fas fa-calendar-day me-2"></i>{{ event.start_date|date:"F j, Y" }}
+                            {% if event.start_date|date:"Y-m-d" != event.end_date|date:"Y-m-d" %}
+                                to {{ event.end_date|date:"F j, Y" }}
+                            {% endif %}
+                            <br>
+                            <i class="fas fa-clock me-2"></i>{{ event.start_date|date:"g:i A" }} - {{ event.end_date|date:"g:i A" }}
+                        </p>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <h5>Location</h5>
+                        <p><i class="fas fa-map-marker-alt me-2"></i>{{ event.location }}</p>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <h5>Registration</h5>
+                        <p>
+                            <i class="fas fa-hourglass-end me-2"></i>Deadline: {{ event.registration_deadline|date:"F j, Y g:i A" }}
+                            <br>
+                            <i class="fas fa-users me-2"></i>
+                            {% if event.max_participants > 0 %}
+                                {{ event.get_registered_count }} / {{ event.max_participants }} participants
+                            {% else %}
+                                {{ event.get_registered_count }} participants (unlimited capacity)
+                            {% endif %}
+                        </p>
+                    </div>
+                    
+                    <div>
+                        <h5>Organizer</h5>
+                        <p><i class="fas fa-user me-2"></i>{{ event.organizer.get_full_name|default:event.organizer.username }}</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Share Event -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4>Share Event</h4>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-around">
+                        <a href="#" class="text-primary" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(window.location.href), 'facebook-share-dialog', 'width=626,height=436'); return false;">
+                            <i class="fab fa-facebook-square fa-2x"></i>
+                        </a>
+                        <a href="#" class="text-info" onclick="window.open('https://twitter.com/intent/tweet?text={{ event.title }}&url=' + encodeURIComponent(window.location.href), 'twitter-share-dialog', 'width=626,height=436'); return false;">
+                            <i class="fab fa-twitter-square fa-2x"></i>
+                        </a>
+                        <a href="#" class="text-success" onclick="window.open('https://api.whatsapp.com/send?text={{ event.title }} - ' + encodeURIComponent(window.location.href), 'whatsapp-share-dialog', 'width=626,height=436'); return false;">
+                            <i class="fab fa-whatsapp-square fa-2x"></i>
+                        </a>
+                        <a href="#" class="text-secondary" onclick="navigator.clipboard.writeText(window.location.href); alert('Link copied to clipboard!'); return false;">
+                            <i class="fas fa-link fa-2x"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Similar Events -->
+            <div class="card">
+                <div class="card-header">
+                    <h4>Similar Events</h4>
+                </div>
+                <div class="card-body">
+                    <div class="list-group list-group-flush">
+                        {% for similar_event in similar_events %}
+                            <a href="{% url 'event-detail' similar_event.pk %}" class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">{{ similar_event.title }}</h6>
+                                </div>
+                                <small>{{ similar_event.start_date|date:"F j, Y" }}</small>
+                            </a>
+                        {% empty %}
+                            <p class="text-muted">No similar events found.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
