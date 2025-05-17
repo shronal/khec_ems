@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'ems_app',  # Custom app for the EMS
     'users',  # Custom user app
+    'crispy_forms',
+    'crispy_bootstrap5',  # Must come after crispy_forms
 
 ]
 
@@ -140,3 +142,7 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
+# Add at the BOTTOM of settings.py
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
