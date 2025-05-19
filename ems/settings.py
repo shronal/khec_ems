@@ -129,10 +129,12 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static_root')
 
 # Additional directories for Django to search for static files
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'ems_app/static'),  # App-specific static files
-    os.path.join(BASE_DIR, 'users/static'),
+    os.path.join(BASE_DIR, 'static'),  # Only your global static folder
 ]
 
+# Ensure these settings exist
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
