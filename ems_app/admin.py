@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import EventCategory, Event, EventRegistration, EventFeedback
 
+
 @admin.register(EventCategory)
 class EventCategoryAdmin(admin.ModelAdmin):
     list_display = ('name', 'description')

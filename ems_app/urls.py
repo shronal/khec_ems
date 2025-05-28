@@ -47,5 +47,5 @@ urlpatterns = [
     path('admin-dashboard/', views.admin_dashboard, name='admin-dashboard'),
     path('admin/event/<int:pk>/approval/', views.event_approval, name='event-approval'),
     path('organizer-dashboard/', views.organizer_dashboard, name='organizer-dashboard'),
-    path('my-registrations/', views.user_registrations, name='user-registrations'),
+    path('user-registrations/', views.user_registrations, name='user-registrations'),
 ]

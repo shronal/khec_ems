@@ -1,0 +1,212 @@
+{% extends 'base.html' %}
+
+{% block title %}User Dashboard - KhEC Event Flow{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1>Welcome, {{ user.get_full_name|default:user.username }}!</h1>
+                <div class="text-muted">
+                    <i class="fas fa-calendar-alt me-1"></i>
+                    {{ "now"|date:"F j, Y" }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-4 mb-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="card-title">{{ total_registrations }}</h4>
+                            <p class="card-text">Total Registrations</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-ticket-alt fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="card-title">{{ upcoming_events|length }}</h4>
+                            <p class="card-text">Upcoming Events</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-calendar-check fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="card-title">{{ user.event_feedback.count }}</h4>
+                            <p class="card-text">Feedback Given</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-star fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4><i class="fas fa-bolt me-2"></i>Quick Actions</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 mb-2">
+                            <a href="{% url 'event-list' %}" class="btn btn-outline-primary w-100">
+                                <i class="fas fa-search me-2"></i>Browse Events
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <a href="{% url 'my-registrations' %}" class="btn btn-outline-success w-100">
+                                <i class="fas fa-list me-2"></i>My Registrations
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <a href="{% url 'profile' %}" class="btn btn-outline-info w-100">
+                                <i class="fas fa-user me-2"></i>Edit Profile
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            {% if user.is_organizer %}
+                                <a href="{% url 'event-create' %}" class="btn btn-outline-warning w-100">
+                                    <i class="fas fa-plus me-2"></i>Create Event
+                                </a>
+                            {% else %}
+                                <a href="{% url 'register' %}" class="btn btn-outline-secondary w-100" onclick="alert('Contact admin to become an organizer'); return false;">
+                                    <i class="fas fa-user-plus me-2"></i>Become Organizer
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upcoming Events -->
+    <div class="row mb-4">
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h4><i class="fas fa-calendar-alt me-2"></i>Upcoming Events</h4>
+                    <a href="{% url 'my-registrations' %}" class="btn btn-sm btn-outline-primary">View All</a>
+                </div>
+                <div class="card-body">
+                    {% if upcoming_events %}
+                        <div class="list-group list-group-flush">
+                            {% for registration in upcoming_events %}
+                                <div class="list-group-item d-flex justify-content-between align-items-start">
+                                    <div class="ms-2 me-auto">
+                                        <div class="fw-bold">{{ registration.event.title }}</div>
+                                        <small class="text-muted">
+                                            <i class="fas fa-calendar me-1"></i>{{ registration.event.start_date|date:"M d, Y" }}
+                                            <i class="fas fa-clock ms-2 me-1"></i>{{ registration.event.start_date|date:"g:i A" }}
+                                        </small>
+                                        <br>
+                                        <small class="text-muted">
+                                            <i class="fas fa-map-marker-alt me-1"></i>{{ registration.event.location }}
+                                        </small>
+                                    </div>
+                                    <a href="{% url 'event-detail' registration.event.pk %}" class="btn btn-sm btn-outline-primary">View</a>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">No upcoming events registered.</p>
+                            <a href="{% url 'event-list' %}" class="btn btn-primary">Browse Events</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Registrations -->
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h4><i class="fas fa-history me-2"></i>Recent Registrations</h4>
+                    <a href="{% url 'my-registrations' %}" class="btn btn-sm btn-outline-primary">View All</a>
+                </div>
+                <div class="card-body">
+                    {% if registered_events %}
+                        <div class="list-group list-group-flush">
+                            {% for registration in registered_events %}
+                                <div class="list-group-item d-flex justify-content-between align-items-start">
+                                    <div class="ms-2 me-auto">
+                                        <div class="fw-bold">{{ registration.event.title }}</div>
+                                        <small class="text-muted">
+                                            Registered: {{ registration.registration_date|date:"M d, Y" }}
+                                        </small>
+                                        <br>
+                                        <small class="text-muted">
+                                            Event: {{ registration.event.start_date|date:"M d, Y" }}
+                                        </small>
+                                    </div>
+                                    <div class="text-end">
+                                        {% if registration.event.start_date > now %}
+                                            <span class="badge bg-success">Upcoming</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">Past</span>
+                                        {% endif %}
+                                        <br>
+                                        <a href="{% url 'event-detail' registration.event.pk %}" class="btn btn-sm btn-outline-primary mt-1">View</a>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-ticket-alt fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">No event registrations yet.</p>
+                            <a href="{% url 'event-list' %}" class="btn btn-primary">Browse Events</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Completion -->
+    {% if not user.first_name or not user.last_name or not user.phone_number %}
+        <div class="row">
+            <div class="col-12">
+                <div class="alert alert-warning" role="alert">
+                    <h4 class="alert-heading"><i class="fas fa-exclamation-triangle me-2"></i>Complete Your Profile</h4>
+                    <p>Your profile is incomplete. Please update your information to get the most out of KhEC Event Flow.</p>
+                    <hr>
+                    <a href="{% url 'profile' %}" class="btn btn-warning">
+                        <i class="fas fa-user-edit me-2"></i>Update Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
