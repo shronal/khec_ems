@@ -4,19 +4,129 @@
 
 {% block content %}
 <div class="container">
-    <h1 class="mb-4">My Registrations</h1>
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1>My Event Registrations</h1>
+                <a href="{% url 'event-list' %}" class="btn btn-primary">
+                    <i class="fas fa-search me-2"></i>Browse More Events
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="card-title">{{ registrations|length }}</h4>
+                            <p class="card-text">Total Registrations</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-ticket-alt fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3 mb-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            {% with upcoming_count=0 %}
+                                {% for registration in registrations %}
+                                    {% if registration.event.start_date > now %}
+                                        {% with upcoming_count=upcoming_count|add:1 %}{% endwith %}
+                                    {% endif %}
+                                {% endfor %}
+                                <h4 class="card-title">
+                                    {% for registration in registrations %}
+                                        {% if registration.event.start_date > now %}
+                                            {% if forloop.first %}{{ forloop.parentloop.counter0|add:forloop.counter }}{% endif %}
+                                        {% endif %}
+                                    {% empty %}0{% endfor %}
+                                </h4>
+                            {% endwith %}
+                            <p class="card-text">Upcoming Events</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-calendar-check fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3 mb-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="card-title">
+                                {% for registration in registrations %}
+                                    {% if registration.checked_in %}
+                                        {% if forloop.first %}{{ forloop.parentloop.counter0|add:forloop.counter }}{% endif %}
+                                    {% endif %}
+                                {% empty %}0{% endfor %}
+                            </h4>
+                            <p class="card-text">Events Attended</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-check-circle fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3 mb-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="card-title">
+                                {% for registration in registrations %}
+                                    {% if registration.event.end_date < now and not registration.checked_in %}
+                                        {% if forloop.first %}{{ forloop.parentloop.counter0|add:forloop.counter }}{% endif %}
+                                    {% endif %}
+                                {% empty %}0{% endfor %}
+                            </h4>
+                            <p class="card-text">Missed Events</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-times-circle fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     
     <div class="card mb-4">
         <div class="card-header">
             <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="upcoming-tab" data-bs-toggle="tab" data-bs-target="#upcoming" type="button" role="tab" aria-controls="upcoming" aria-selected="true">Upcoming Events</button>
+                    <button class="nav-link active" id="upcoming-tab" data-bs-toggle="tab" data-bs-target="#upcoming" type="button" role="tab" aria-controls="upcoming" aria-selected="true">
+                        Upcoming Events
+                        <span class="badge bg-light text-dark ms-1" id="upcoming-count">0</span>
+                    </button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="past-tab" data-bs-toggle="tab" data-bs-target="#past" type="button" role="tab" aria-controls="past" aria-selected="false">Past Events</button>
+                    <button class="nav-link" id="past-tab" data-bs-toggle="tab" data-bs-target="#past" type="button" role="tab" aria-controls="past" aria-selected="false">
+                        Past Events
+                        <span class="badge bg-light text-dark ms-1" id="past-count">0</span>
+                    </button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="all-tab" data-bs-toggle="tab" data-bs-target="#all" type="button" role="tab" aria-controls="all" aria-selected="false">All Registrations</button>
+                    <button class="nav-link" id="all-tab" data-bs-toggle="tab" data-bs-target="#all" type="button" role="tab" aria-controls="all" aria-selected="false">
+                        All Registrations
+                        <span class="badge bg-light text-dark ms-1">{{ registrations|length }}</span>
+                    </button>
                 </li>
             </ul>
         </div>
@@ -24,128 +134,267 @@
             <div class="tab-content" id="myTabContent">
                 <!-- Upcoming Events -->
                 <div class="tab-pane fade show active" id="upcoming" role="tabpanel" aria-labelledby="upcoming-tab">
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Event</th>
-                                    <th>Date</th>
-                                    <th>Location</th>
-                                    <th>Registration Date</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for registration in registrations %}
-                                    {% if registration.event.start_date > now %}
-                                        <tr>
-                                            <td>{{ registration.event.title }}</td>
-                                            <td>{{ registration.event.start_date|date:"M d, Y" }}</td>
-                                            <td>{{ registration.event.location }}</td>
-                                            <td>{{ registration.registration_date|date:"M d, Y" }}</td>
-                                            <td>
-                                                <a href="{% url 'event-detail' registration.event.pk %}" class="btn btn-sm btn-outline-primary">View Event</a>
-                                                <a href="{% url 'cancel-registration' registration.event.pk %}" class="btn btn-sm btn-outline-danger">Cancel</a>
-                                            </td>
-                                        </tr>
-                                    {% endif %}
-                                {% empty %}
-                                    <tr>
-                                        <td colspan="5" class="text-center">No upcoming event registrations found.</td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+                    <div class="row" id="upcoming-events">
+                        {% for registration in registrations %}
+                            {% if registration.event.start_date > now %}
+                                <div class="col-md-6 mb-3">
+                                    <div class="card border-start border-success border-4">
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ registration.event.title }}</h5>
+                                            <p class="card-text">
+                                                <small class="text-muted">
+                                                    <i class="fas fa-map-marker-alt me-1"></i>{{ registration.event.location }}<br>
+                                                    <i class="fas fa-calendar me-1"></i>{{ registration.event.start_date|date:"F j, Y" }}<br>
+                                                    <i class="fas fa-clock me-1"></i>{{ registration.event.start_date|date:"g:i A" }} - {{ registration.event.end_date|date:"g:i A" }}<br>
+                                                    <i class="fas fa-calendar-plus me-1"></i>Registered: {{ registration.registration_date|date:"M d, Y" }}
+                                                </small>
+                                            </p>
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <span class="badge bg-success">{{ registration.get_status_display }}</span>
+                                                    {% if registration.event.is_free %}
+                                                        <span class="badge bg-info">Free</span>
+                                                    {% endif %}
+                                                    <span class="badge bg-primary">{{ registration.event.category.name }}</span>
+                                                </div>
+                                                <div>
+                                                    <a href="{% url 'event-detail' registration.event.slug %}" class="btn btn-sm btn-outline-primary">View</a>
+                                                    <a href="{% url 'cancel-registration' registration.event.slug %}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to cancel your registration?')">Cancel</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% empty %}
+                            <div class="col-12">
+                                <div class="text-center py-4">
+                                    <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                                    <h5 class="text-muted">No upcoming events</h5>
+                                    <p class="text-muted">You don't have any upcoming event registrations.</p>
+                                    <a href="{% url 'event-list' %}" class="btn btn-primary">Browse Events</a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <!-- Show message if no upcoming events -->
+                    <div id="no-upcoming-message" class="text-center py-4" style="display: none;">
+                        <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No upcoming events</h5>
+                        <p class="text-muted">You don't have any upcoming event registrations.</p>
+                        <a href="{% url 'event-list' %}" class="btn btn-primary">Browse Events</a>
                     </div>
                 </div>
                 
                 <!-- Past Events -->
                 <div class="tab-pane fade" id="past" role="tabpanel" aria-labelledby="past-tab">
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Event</th>
-                                    <th>Date</th>
-                                    <th>Location</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for registration in registrations %}
-                                    {% if registration.event.end_date < now %}
-                                        <tr>
-                                            <td>{{ registration.event.title }}</td>
-                                            <td>{{ registration.event.start_date|date:"M d, Y" }}</td>
-                                            <td>{{ registration.event.location }}</td>
-                                            <td>
-                                                {% if registration.attended %}
-                                                    <span class="badge bg-success">Attended</span>
-                                                {% else %}
-                                                    <span class="badge bg-secondary">Not Attended</span>
-                                                {% endif %}
-                                            </td>
-                                            <td>
-                                                <a href="{% url 'event-detail' registration.event.pk %}" class="btn btn-sm btn-outline-primary">View Event</a>
-                                                {% if not registration.event.feedback.filter(user=user).exists %}
-                                                    <a href="{% url 'event-detail' registration.event.pk %}#feedback" class="btn btn-sm btn-outline-secondary">Leave Feedback</a>
-                                                {% endif %}
-                                            </td>
-                                        </tr>
-                                    {% endif %}
-                                {% empty %}
-                                    <tr>
-                                        <td colspan="5" class="text-center">No past event registrations found.</td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+                    <div class="row" id="past-events">
+                        {% for registration in registrations %}
+                            {% if registration.event.end_date < now %}
+                                <div class="col-md-6 mb-3">
+                                    <div class="card border-start border-secondary border-4">
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ registration.event.title }}</h5>
+                                            <p class="card-text">
+                                                <small class="text-muted">
+                                                    <i class="fas fa-map-marker-alt me-1"></i>{{ registration.event.location }}<br>
+                                                    <i class="fas fa-calendar me-1"></i>{{ registration.event.start_date|date:"F j, Y g:i A" }}<br>
+                                                    <i class="fas fa-user me-1"></i>{{ registration.event.organizer.get_full_name|default:registration.event.organizer.username }}
+                                                </small>
+                                            </p>
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    {% if registration.checked_in %}
+                                                        <span class="badge bg-success">
+                                                            <i class="fas fa-check me-1"></i>Attended
+                                                        </span>
+                                                    {% else %}
+                                                        <span class="badge bg-secondary">
+                                                            <i class="fas fa-times me-1"></i>Not Attended
+                                                        </span>
+                                                    {% endif %}
+                                                    {% if registration.event.category %}
+                                                        <span class="badge bg-primary">{{ registration.event.category.name }}</span>
+                                                    {% endif %}
+                                                </div>
+                                                <div>
+                                                    <a href="{% url 'event-detail' registration.event.slug %}" class="btn btn-sm btn-outline-primary">View</a>
+                                                    {% if registration.checked_in %}
+                                                        {% comment %}Check if user has already given feedback{% endcomment %}
+                                                        {% if not registration.event.feedback.all %}
+                                                            <a href="{% url 'event-detail' registration.event.slug %}#feedback" class="btn btn-sm btn-outline-secondary">Feedback</a>
+                                                        {% endif %}
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% empty %}
+                            <div class="col-12">
+                                <div class="text-center py-4">
+                                    <i class="fas fa-history fa-3x text-muted mb-3"></i>
+                                    <h5 class="text-muted">No past events</h5>
+                                    <p class="text-muted">You haven't attended any events yet.</p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <!-- Show message if no past events -->
+                    <div id="no-past-message" class="text-center py-4" style="display: none;">
+                        <i class="fas fa-history fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No past events</h5>
+                        <p class="text-muted">You haven't attended any events yet.</p>
                     </div>
                 </div>
                 
                 <!-- All Registrations -->
                 <div class="tab-pane fade" id="all" role="tabpanel" aria-labelledby="all-tab">
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Event</th>
-                                    <th>Date</th>
-                                    <th>Location</th>
-                                    <th>Registration Date</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for registration in registrations %}
+                    {% if registrations %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
                                     <tr>
-                                        <td>{{ registration.event.title }}</td>
-                                        <td>{{ registration.event.start_date|date:"M d, Y" }}</td>
-                                        <td>{{ registration.event.location }}</td>
-                                        <td>{{ registration.registration_date|date:"M d, Y" }}</td>
-                                        <td>
-                                            <a href="{% url 'event-detail' registration.event.pk %}" class="btn btn-sm btn-outline-primary">View Event</a>
-                                            {% if registration.event.start_date > now %}
-                                                <a href="{% url 'cancel-registration' registration.event.pk %}" class="btn btn-sm btn-outline-danger">Cancel</a>
-                                            {% endif %}
-                                        </td>
+                                        <th>Event</th>
+                                        <th>Category</th>
+                                        <th>Date</th>
+                                        <th>Location</th>
+                                        <th>Registration Date</th>
+                                        <th>Status</th>
+                                        <th>Attendance</th>
+                                        <th>Actions</th>
                                     </tr>
-                                {% empty %}
-                                    <tr>
-                                        <td colspan="5" class="text-center">No registrations found.</td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
+                                </thead>
+                                <tbody>
+                                    {% for registration in registrations %}
+                                        <tr>
+                                            <td>
+                                                <strong>{{ registration.event.title }}</strong>
+                                                {% if registration.event.is_featured %}
+                                                    <span class="badge bg-warning ms-1">Featured</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-primary">{{ registration.event.category.name }}</span>
+                                            </td>
+                                            <td>{{ registration.event.start_date|date:"M d, Y" }}</td>
+                                            <td>{{ registration.event.location }}</td>
+                                            <td>{{ registration.registration_date|date:"M d, Y" }}</td>
+                                            <td>
+                                                <span class="badge bg-success">{{ registration.get_status_display }}</span>
+                                            </td>
+                                            <td>
+                                                {% if registration.event.end_date < now %}
+                                                    {% if registration.checked_in %}
+                                                        <span class="badge bg-success">Attended</span>
+                                                    {% else %}
+                                                        <span class="badge bg-secondary">Missed</span>
+                                                    {% endif %}
+                                                {% else %}
+                                                    <span class="badge bg-info">Upcoming</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <a href="{% url 'event-detail' registration.event.slug %}" class="btn btn-sm btn-outline-primary">View</a>
+                                                {% if registration.event.start_date > now %}
+                                                    <a href="{% url 'cancel-registration' registration.event.slug %}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Cancel registration?')">Cancel</a>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-inbox fa-2x text-muted mb-2"></i>
+                            <p class="text-muted">No registrations found.</p>
+                            <a href="{% url 'event-list' %}" class="btn btn-primary">Browse Events</a>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
     </div>
     
-    <div class="text-center">
-        <a href="{% url 'event-list' %}" class="btn btn-primary">Browse More Events</a>
+    <!-- Quick Actions -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-bolt me-2"></i>Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 mb-2">
+                            <a href="{% url 'event-list' %}" class="btn btn-outline-primary w-100">
+                                <i class="fas fa-search me-2"></i>Browse Events
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <a href="{% url 'event-list' %}?date_filter=upcoming" class="btn btn-outline-success w-100">
+                                <i class="fas fa-calendar-plus me-2"></i>Upcoming Events
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <a href="{% url 'profile' %}" class="btn btn-outline-info w-100">
+                                <i class="fas fa-user me-2"></i>My Profile
+                            </a>
+                        </div>
+                        {% if user.is_organizer %}
+                            <div class="col-md-3 mb-2">
+                                <a href="{% url 'organizer-dashboard' %}" class="btn btn-outline-warning w-100">
+                                    <i class="fas fa-tachometer-alt me-2"></i>Organizer Dashboard
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Count upcoming and past events
+    const upcomingEvents = document.querySelectorAll('#upcoming-events .col-md-6');
+    const pastEvents = document.querySelectorAll('#past-events .col-md-6');
+    
+    // Update badge counts
+    document.getElementById('upcoming-count').textContent = upcomingEvents.length;
+    document.getElementById('past-count').textContent = pastEvents.length;
+    
+    // Show/hide empty state messages
+    if (upcomingEvents.length === 0) {
+        document.getElementById('no-upcoming-message').style.display = 'block';
+    }
+    
+    if (pastEvents.length === 0) {
+        document.getElementById('no-past-message').style.display = 'block';
+    }
+    
+    // Add confirmation for cancellation links
+    const cancelLinks = document.querySelectorAll('a[href*="cancel-registration"]');
+    cancelLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            if (!confirm('Are you sure you want to cancel your registration for this event?')) {
+                e.preventDefault();
+            }
+        });
+    });
+    
+    // Auto-refresh upcoming events every 5 minutes
+    setInterval(() => {
+        if (document.getElementById('upcoming-tab').classList.contains('active')) {
+            location.reload();
+        }
+    }, 300000); // 5 minutes
+});
+</script>
 {% endblock %}
