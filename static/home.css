@@ -1,0 +1,67 @@
+/* Base Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5fff5;
+    margin: 0;
+    padding: 0;
+    color: #1f3d1f;
+}
+
+/* Header */
+header {
+    background-color: #2e7d32; /* dark green */
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+/* Navigation Bar */
+.navbar {
+    background-color: #388e3c; /* medium green */
+}
+.navbar a {
+    color: white !important;
+}
+.navbar a:hover {
+    background-color: #2e7d32;
+}
+
+/* Main Section */
+.main-content {
+    padding: 40px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    margin: 20px auto;
+    max-width: 1000px;
+    box-shadow: 0 4px 8px rgba(0, 100, 0, 0.1);
+}
+
+/* Buttons */
+.btn-green {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+}
+.btn-green:hover {
+    background-color: #388e3c;
+}
+
+/* Cards or Boxes */
+.card {
+    border: 1px solid #c8e6c9;
+    border-radius: 8px;
+    background-color: #e8f5e9;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+/* Footer */
+footer {
+    background-color: #2e7d32;
+    color: white;
+    padding: 15px;
+    text-align: center;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}

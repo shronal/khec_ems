@@ -103,7 +103,7 @@
                                                id="id_first_name" 
                                                name="first_name" 
                                                value="{{ form.first_name.value|default:'' }}"
-                                               placeholder="First Name"
+                                               
                                                required>
                                         <label for="id_first_name">
                                             <i class="fas fa-user me-1"></i>First Name *
@@ -124,7 +124,7 @@
                                                id="id_last_name" 
                                                name="last_name" 
                                                value="{{ form.last_name.value|default:'' }}"
-                                               placeholder="Last Name"
+                                               
                                                required>
                                         <label for="id_last_name">
                                             <i class="fas fa-user me-1"></i>Last Name *
@@ -152,7 +152,7 @@
                                        id="id_username" 
                                        name="username" 
                                        value="{{ form.username.value|default:'' }}"
-                                       placeholder="Username"
+                                      
                                        required>
                                 <label for="id_username">
                                     <i class="fas fa-at me-1"></i>Username *
@@ -174,7 +174,7 @@
                                        id="id_email" 
                                        name="email" 
                                        value="{{ form.email.value|default:'' }}"
-                                       placeholder="Email"
+                                       
                                        required>
                                 <label for="id_email">
                                     <i class="fas fa-envelope me-1"></i>Email Address *
@@ -193,7 +193,7 @@
                                            class="form-control {% if form.password1.errors %}is-invalid{% endif %}" 
                                            id="id_password1" 
                                            name="password1"
-                                           placeholder="Password"
+                        
                                            required>
                                     <button class="btn btn-outline-secondary" type="button" id="togglePassword1">
                                         <i class="fas fa-eye" id="toggleIcon1"></i>
@@ -220,7 +220,7 @@
                                            class="form-control {% if form.password2.errors %}is-invalid{% endif %}" 
                                            id="id_password2" 
                                            name="password2"
-                                           placeholder="Confirm Password"
+                                        
                                            required>
                                     <button class="btn btn-outline-secondary" type="button" id="togglePassword2">
                                         <i class="fas fa-eye" id="toggleIcon2"></i>
@@ -277,7 +277,7 @@
                                        id="id_phone_number" 
                                        name="phone_number" 
                                        value="{{ form.phone_number.value|default:'' }}"
-                                       placeholder="Phone Number">
+                                      
                                 <label for="id_phone_number">
                                     <i class="fas fa-phone me-1"></i>Phone Number (Optional)
                                 </label>
