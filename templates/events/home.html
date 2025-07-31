@@ -3,6 +3,7 @@
 {% block title %}KhEC Event Flow - Home{% endblock %}
 
 {% block content %}
+{% load static%}
 <div class="container">
     <!-- Hero Section -->
     <div class="row align-items-center py-5">
@@ -20,7 +21,7 @@
             </div>
         </div>
         <div class="col-lg-6">
-            <img src="https://via.placeholder.com/600x400?text=KhEC+Event+Flow" alt="KhEC Event Flow" class="img-fluid rounded shadow">
+            <img src="{% static 'images/logo.png' %}" alt="KhEC Event Flow" class="img-fluid rounded shadow">
         </div>
     </div>
 
