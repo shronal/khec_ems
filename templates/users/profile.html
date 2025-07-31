@@ -1,12 +1,13 @@
 {% extends 'base.html' %}
-{% load crispy_forms_tags %}
 
 {% block title %}Profile - KhEC Event Flow{% endblock %}
 
 {% block content %}
 <div class="container">
     <div class="row">
+        <!-- Left Column -->
         <div class="col-md-4 mb-4">
+            <!-- Profile Info -->
             <div class="card">
                 <div class="card-header">
                     <h4>Profile Information</h4>
@@ -28,7 +29,8 @@
                     </div>
                 </div>
             </div>
-            
+
+            <!-- Account Stats -->
             <div class="card mt-4">
                 <div class="card-header">
                     <h4>Account Statistics</h4>
@@ -47,8 +49,10 @@
                 </div>
             </div>
         </div>
-        
+
+        <!-- Right Column -->
         <div class="col-md-8">
+            <!-- Edit Profile -->
             <div class="card">
                 <div class="card-header">
                     <h4>Edit Profile</h4>
@@ -56,40 +60,65 @@
                 <div class="card-body">
                     <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
-                        
+
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                {{ form.first_name|as_crispy_field }}
+                                <label for="id_first_name" class="form-label">First Name</label>
+                                {{ form.first_name }}
+                                {% if form.first_name.errors %}
+                                    <div class="text-danger">{{ form.first_name.errors }}</div>
+                                {% endif %}
                             </div>
                             <div class="col-md-6 mb-3">
-                                {{ form.last_name|as_crispy_field }}
+                                <label for="id_last_name" class="form-label">Last Name</label>
+                                {{ form.last_name }}
+                                {% if form.last_name.errors %}
+                                    <div class="text-danger">{{ form.last_name.errors }}</div>
+                                {% endif %}
                             </div>
                         </div>
-                        
+
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                {{ form.email|as_crispy_field }}
+                                <label for="id_email" class="form-label">Email</label>
+                                {{ form.email }}
+                                {% if form.email.errors %}
+                                    <div class="text-danger">{{ form.email.errors }}</div>
+                                {% endif %}
                             </div>
                             <div class="col-md-6 mb-3">
-                                {{ form.phone_number|as_crispy_field }}
+                                <label for="id_phone_number" class="form-label">Phone Number</label>
+                                {{ form.phone_number }}
+                                {% if form.phone_number.errors %}
+                                    <div class="text-danger">{{ form.phone_number.errors }}</div>
+                                {% endif %}
                             </div>
                         </div>
-                        
+
                         <div class="mb-3">
-                            {{ form.profile_picture|as_crispy_field }}
+                            <label for="id_profile_picture" class="form-label">Profile Picture</label>
+                            {{ form.profile_picture }}
+                            {% if form.profile_picture.errors %}
+                                <div class="text-danger">{{ form.profile_picture.errors }}</div>
+                            {% endif %}
                         </div>
-                        
+
                         <div class="mb-3">
-                            {{ form.bio|as_crispy_field }}
+                            <label for="id_bio" class="form-label">Bio</label>
+                            {{ form.bio }}
+                            {% if form.bio.errors %}
+                                <div class="text-danger">{{ form.bio.errors }}</div>
+                            {% endif %}
                         </div>
-                        
+
                         <div class="d-grid gap-2">
                             <button type="submit" class="btn btn-primary">Update Profile</button>
                         </div>
                     </form>
                 </div>
             </div>
-            
+
+            <!-- Organizer Tools -->
             {% if user.is_organizer %}
                 <div class="card mt-4">
                     <div class="card-header">
@@ -107,7 +136,8 @@
                     </div>
                 </div>
             {% endif %}
-            
+
+            <!-- Admin Tools -->
             {% if user.is_admin_user %}
                 <div class="card mt-4">
                     <div class="card-header">
