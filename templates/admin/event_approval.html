@@ -70,8 +70,6 @@
                 <div class="card-body">
                     <form method="post">
                         {% csrf_token %}
-                        {{ form|crispy }}
-                        
                         <div class="d-grid gap-2 mt-3">
                             <button type="submit" name="status" value="approved" class="btn btn-success">
                                 <i class="fas fa-check-circle me-2"></i>Approve Event
