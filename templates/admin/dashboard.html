@@ -51,8 +51,8 @@
                                         <td>{{ event.location }}</td>
                                         <td>{{ event.created_at|date:"M d, Y" }}</td>
                                         <td>
-                                            <a href="{% url 'event-detail' event.slug %}" class="btn btn-sm btn-outline-primary">View</a>
-                                            <a href="{% url 'event-approval' event.slug %}" class="btn btn-sm btn-outline-success">Review</a>
+                                            <a href="{% url 'event-detail' event.pk %}" class="btn btn-sm btn-outline-primary">View</a>
+                                            <a href="{% url 'event-approval' event.pk %}" class="btn btn-sm btn-outline-success">Review</a>
                                         </td>
                                     </tr>
                                 {% empty %}
