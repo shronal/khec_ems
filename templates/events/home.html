@@ -2,6 +2,17 @@
 
 {% block title %}KhEC Event Flow - Home{% endblock %}
 
+{% block extra_css %}
+<style>
+    .circle-img {
+  width: 300;     /* Adjust size as needed */
+  height: 280px;    /* Make sure height = width */
+  object-fit: cover; /* Keeps aspect ratio inside the circle */
+  border-radius: 50%; /* Makes it a circle */
+  margin-left: 100px;
+}
+</style>
+{% endblock%}
 {% block content %}
 {% load static%}
 <div class="container">
@@ -24,7 +35,10 @@
             </div>
         </div>
         <div class="col-lg-6">
-            <img src="{% static 'images/loo.jpeg' %}" alt="KhEC Event Flow" class="img-fluid rounded shadow">
+            <img src="{% static 'images/banner.png' %}" 
+     alt="KhEC Event Flow" 
+     class="img-fluid rounded shadow circle-img">
+
         </div>
     </div>
 
