@@ -562,7 +562,7 @@ def organizer_dashboard(request):
     events = Event.objects.filter(organizer=request.user).order_by('-created_at')
     
     context = {
-        'events': events,
+        'recent_events': events, 
     }
     
     return render(request, 'events/organizer_dashboard.html', context)

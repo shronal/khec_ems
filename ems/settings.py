@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'ems_app',  # Custom app for the EMS
     'users',  # Custom user app
     'crispy_forms',
-    'crispy_bootstrap5',  # Must come after crispy_forms
+    'crispy_bootstrap4',  # Must come after crispy_forms
 
 ]
 
@@ -171,6 +171,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Crispy forms
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 # Login URLs
