@@ -8,9 +8,12 @@
     <!-- Hero Section -->
     <div class="row align-items-center py-5">
         <div class="col-lg-6">
-            <h1 class="display-4 fw-bold">KhEC Event Flow</h1>
+            <h1 style="color: #2b2069ff; font-family: Helvetica; font-weight: 500;">
+  Create any event easily. <br>Control every detail.
+</h1>
+
             <p class="lead">Discover, participate, and organize events at Khwopa Engineering College.</p>
-            <p class="mb-4">Join our platform to stay updated with all the exciting events happening at KhEC. Whether you're looking to attend or organize events, we've got you covered!</p>
+
             <div class="d-grid gap-2 d-md-flex justify-content-md-start">
                 <a href="{% url 'event-list' %}" class="btn btn-primary btn-lg px-4 me-md-2">Browse Events</a>
                 {% if user.is_authenticated and user.is_organizer %}
@@ -21,7 +24,7 @@
             </div>
         </div>
         <div class="col-lg-6">
-            <img src="{% static 'images/logo.png' %}" alt="KhEC Event Flow" class="img-fluid rounded shadow">
+            <img src="{% static 'images/loo.jpeg' %}" alt="KhEC Event Flow" class="img-fluid rounded shadow">
         </div>
     </div>
 
@@ -73,7 +76,7 @@
         <div class="col-md-4 mb-4">
             <div class="card h-100 p-3">
                 <div class="card-body">
-                    <i class="fas fa-calendar-check fa-3x mb-3 text-primary"></i>
+                    <i class="fas fa-calendar-check fa-3x mb-3 text-primary" style="color: #4b2e83;"></i>
                     <h4>Discover Events</h4>
                     <p>Find all the events happening at KhEC in one place. Filter by category, date, and more.</p>
                 </div>
@@ -83,7 +86,7 @@
         <div class="col-md-4 mb-4">
             <div class="card h-100 p-3">
                 <div class="card-body">
-                    <i class="fas fa-user-plus fa-3x mb-3 text-primary"></i>
+                    <i style="color: #4b2e83;" class="fas fa-user-plus fa-3x mb-3 text-primary "></i>
                     <h4>Easy Registration</h4>
                     <p>Register for events with just one click. Get reminders and updates about your registered events.</p>
                 </div>
@@ -93,7 +96,7 @@
         <div class="col-md-4 mb-4">
             <div class="card h-100 p-3">
                 <div class="card-body">
-                    <i class="fas fa-tasks fa-3x mb-3 text-primary"></i>
+                    <i style="color: #4b2e83;" class="fas fa-tasks fa-3x mb-3 text-primary"></i>
                     <h4>Organize Events</h4>
                     <p>Create and manage your own events. Track registrations and get feedback from participants.</p>
                 </div>
