@@ -54,9 +54,9 @@
                                             <td>{{ event.location }}</td>
                                             <td><span class="badge bg-warning">Pending</span></td>
                                             <td>
-                                                <a href="{% url 'event-detail' event.pk %}" class="btn btn-sm btn-outline-primary">View</a>
-                                                <a href="{% url 'event-update' event.pk %}" class="btn btn-sm btn-outline-secondary">Edit</a>
-                                                <a href="{% url 'event-delete' event.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                                                <a href="{% url 'event-detail' event.slug %}" class="btn btn-sm btn-outline-primary">View</a>
+                                                <a href="{% url 'event-update' event.slug %}" class="btn btn-sm btn-outline-secondary">Edit</a>
+                                                <a href="{% url 'event-delete' event.slug %}" class="btn btn-sm btn-outline-danger">Delete</a>
                                             </td>
                                         </tr>
                                     {% endif %}
@@ -98,9 +98,9 @@
                                                 {% endif %}
                                             </td>
                                             <td>
-                                                <a href="{% url 'event-detail' event.pk %}" class="btn btn-sm btn-outline-primary">View</a>
-                                                <a href="{% url 'event-update' event.pk %}" class="btn btn-sm btn-outline-secondary">Edit</a>
-                                                <a href="{% url 'event-delete' event.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                                                <a href="{% url 'event-detail' event.slug %}" class="btn btn-sm btn-outline-primary">View</a>
+                                                <a href="{% url 'event-update' event.slug %}" class="btn btn-sm btn-outline-secondary">Edit</a>
+                                                <a href="{% url 'event-delete' event.slug %}" class="btn btn-sm btn-outline-danger">Delete</a>
                                             </td>
                                         </tr>
                                     {% endif %}
@@ -136,9 +136,9 @@
                                             <td>{{ event.location }}</td>
                                             <td><span class="badge bg-danger">Rejected</span></td>
                                             <td>
-                                                <a href="{% url 'event-detail' event.pk %}" class="btn btn-sm btn-outline-primary">View</a>
-                                                <a href="{% url 'event-update' event.pk %}" class="btn btn-sm btn-outline-secondary">Edit</a>
-                                                <a href="{% url 'event-delete' event.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                                                <a href="{% url 'event-detail' event.slug %}" class="btn btn-sm btn-outline-primary">View</a>
+                                                <a href="{% url 'event-update' event.slug %}" class="btn btn-sm btn-outline-secondary">Edit</a>
+                                                <a href="{% url 'event-delete' event.slug %}" class="btn btn-sm btn-outline-danger">Delete</a>
                                             </td>
                                         </tr>
                                     {% endif %}
@@ -183,9 +183,9 @@
                                             {% endif %}
                                         </td>
                                         <td>
-                                            <a href="{% url 'event-detail' event.pk %}" class="btn btn-sm btn-outline-primary">View</a>
-                                            <a href="{% url 'event-update' event.pk %}" class="btn btn-sm btn-outline-secondary">Edit</a>
-                                            <a href="{% url 'event-delete' event.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                                            <a href="{% url 'event-detail' event.slug %}" class="btn btn-sm btn-outline-primary">View</a>
+                                            <a href="{% url 'event-update' event.slug %}" class="btn btn-sm btn-outline-secondary">Edit</a>
+                                            <a href="{% url 'event-delete' event.slug %}" class="btn btn-sm btn-outline-danger">Delete</a>
                                         </td>
                                     </tr>
                                 {% empty %}
