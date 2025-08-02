@@ -4,6 +4,137 @@
 {% block title %}
     {% if form.instance.pk %}Edit Event{% else %}Create Event{% endif %} - KhEC Event Flow
 {% endblock %}
+{% block extra_css %}
+    <!-- Add your custom theme CSS here -->
+<style>
+/* Reset/normalize */
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+}
+
+.card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    border: none;
+    margin-bottom: 40px;
+}
+
+.card-header {
+    background: #fff;
+    border-bottom: 1px solid #eee;
+    padding: 24px 32px;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+}
+
+.card-header h2 {
+    color: #4b2e83;
+    margin: 0;
+    font-size: 1.6rem;
+}
+
+/* Section headers */
+h5.text-muted {
+    background: #f2effc;
+    color: #4b2e83;
+    padding: 10px 16px;
+    border-left: 4px solid #4b2e83;
+    margin-bottom: 20px;
+    border-radius: 6px;
+    font-weight: 600;
+}
+
+/* Form labels and fields */
+.form-label {
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.form-control {
+    border-radius: 10px;
+    border: 1px solid #ced4da;
+    padding: 10px 12px;
+    transition: all 0.3s ease;
+    box-shadow: none;
+}
+
+.form-control:focus {
+    border-color: #4b2e83;
+    box-shadow: 0 0 0 3px rgba(75, 46, 131, 0.15);
+}
+
+.form-text {
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: #4b2e83;
+    border: none;
+    font-weight: 600;
+    padding: 10px 24px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #3a2168;
+}
+
+.btn-outline-secondary {
+    border: 2px solid #6c757d;
+    color: #6c757d;
+    border-radius: 8px;
+    padding: 10px 24px;
+}
+
+.btn-outline-secondary:hover {
+    background-color: #e2e6ea;
+}
+
+/* Alerts */
+.alert {
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 20px;
+}
+
+.alert-warning {
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+    color: #856404;
+}
+
+/* Form Sections */
+.mb-4 {
+    padding: 20px 0;
+    border-bottom: 1px dashed #ddd;
+}
+
+.d-grid button {
+    min-width: 160px;
+}
+
+@media (max-width: 768px) {
+    .card-header h2 {
+        font-size: 1.3rem;
+    }
+    .btn {
+        width: 100%;
+        margin-top: 10px;
+    }
+}
+</style>
+
+{% endblock %}
 
 {% block content %}
 <div class="container">

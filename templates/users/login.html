@@ -1,100 +1,129 @@
 {% extends 'base.html' %}
 
 {% block title %}Login - KhEC Event Flow{% endblock %}
-
+{% load static%}
 {% block extra_css %}
 <style>
-    .login-container {
-        min-height: 80vh;
+    body {
+        background-color: #f5f6fa;
+    }
+
+    .login-wrapper {
+        min-height: 90vh;
         display: flex;
         align-items: center;
     }
-    .login-card {
-        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-        border: none;
+
+    .login-form-section {
+        background: white;
+        padding: 40px;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
     }
-    .login-header {
-        background: linear-gradient(135deg, #007bff, #0056b3);
-        border-radius: 0.375rem 0.375rem 0 0;
-    }
+
     .form-control:focus {
-        border-color: #007bff;
-        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        border-color: #44286b;
+        box-shadow: 0 0 0 0.2rem rgba(68, 40, 107, 0.2);
     }
+
     .btn-login {
-        background: linear-gradient(135deg, #007bff, #0056b3);
+        background-color: #44286b;
+        color: white;
+        font-weight: 600;
         border: none;
-        padding: 0.75rem;
+        padding: 0.65rem;
+    }
+
+    .btn-login:hover {
+        background-color: #301d4e;
+    }
+
+    .login-or {
+        text-align: center;
+        font-weight: 500;
+        color: #888;
+        margin: 15px 0;
+    }
+
+    .login-image-section {
+        text-align: center;
+        padding: 30px;
+    }
+
+    .login-image-section img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .login-illustration-title {
+        font-size: 22px;
+        color: #44286b;
+        font-weight: 600;
+    }
+
+    .login-illustration-text {
+        color: #555;
+        font-size: 14px;
+    }
+
+    .login-footer-note {
+        font-size: 13px;
+        color: #999;
+        border-top: 1px solid #e6e6e6;
+        padding-top: 10px;
+    }
+
+    a {
+        color: #44286b;
+        text-decoration: none;
         font-weight: 500;
     }
-    .btn-login:hover {
-        background: linear-gradient(135deg, #0056b3, #004085);
-        transform: translateY(-1px);
+
+    a:hover {
+        text-decoration: underline;
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="container-fluid login-container">
-    <div class="row justify-content-center w-100">
-        <div class="col-md-6 col-lg-5 col-xl-4">
-            <div class="card login-card">
-                <div class="card-header login-header text-white text-center py-4">
-                    <h2 class="mb-0">
-                        <i class="fas fa-sign-in-alt me-2"></i>
-                        Welcome Back
-                    </h2>
-                    <p class="mb-0 mt-2 opacity-75">Sign in to your account</p>
-                </div>
-                <div class="card-body p-4">
-                    <!-- Login Form -->
-                    <form method="POST" novalidate>
-                        {% csrf_token %}
-                        
-                        <!-- Username Field -->
-                        <div class="mb-3">
-                            <label for="id_username" class="form-label">
-                                <i class="fas fa-user me-1"></i>Username
-                            </label>
-                            <input type="text" 
-                                   class="form-control {% if form.username.errors %}is-invalid{% endif %}" 
-                                   id="id_username" 
-                                   name="username" 
-                                   value="{{ form.username.value|default:'' }}"
-                                   placeholder="Enter your username"
-                                   required
-                                   autofocus>
-                            {% if form.username.errors %}
-                                <div class="invalid-feedback">
-                                    {{ form.username.errors.0 }}
-                                </div>
-                            {% endif %}
-                        </div>
+<div class="container login-wrapper">
+    <div class="row w-100">
+        <div class="col-lg-6 d-flex justify-content-center align-items-center">
+            <div class="login-form-section w-100" style="max-width: 400px;">
+                <h3 class="mb-2 text-dark fw-bold">Log in</h3>
+                <p class="mb-4 text-muted">Welcome back! Please enter your details.</p>
 
-                        <!-- Password Field -->
-                        <div class="mb-3">
-                            <label for="id_password" class="form-label">
-                                <i class="fas fa-lock me-1"></i>Password
-                            </label>
-                            <div class="input-group">
-                                <input type="password" 
-                                       class="form-control {% if form.password.errors %}is-invalid{% endif %}" 
-                                       id="id_password" 
-                                       name="password"
-                                       placeholder="Enter your password"
-                                       required>
-                                <button class="btn btn-outline-secondary" type="button" id="togglePassword">
-                                    <i class="fas fa-eye" id="toggleIcon"></i>
-                                </button>
-                                {% if form.password.errors %}
-                                    <div class="invalid-feedback">
-                                        {{ form.password.errors.0 }}
-                                    </div>
-                                {% endif %}
-                            </div>
-                        </div>
+                <form method="POST" novalidate>
+                    {% csrf_token %}
 
-                        <!-- Remember Me -->
+                    <div class="mb-3">
+                        <label for="id_username" class="form-label">Email</label>
+                        <input type="text" 
+                            class="form-control {% if form.username.errors %}is-invalid{% endif %}"
+                            id="id_username" 
+                            name="username" 
+                            placeholder="Enter your email"
+                            value="{{ form.username.value|default:'' }}" 
+                            required />
+                        {% if form.username.errors %}
+                        <div class="invalid-feedback">{{ form.username.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="id_password" class="form-label">Password</label>
+                        <input type="password" 
+                            class="form-control {% if form.password.errors %}is-invalid{% endif %}"
+                            id="id_password" 
+                            name="password" 
+                            placeholder="Enter your password"
+                            required />
+                        {% if form.password.errors %}
+                        <div class="invalid-feedback">{{ form.password.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Remember Me -->
                         <div class="mb-3 form-check">
                             <input type="checkbox" class="form-check-input" id="rememberMe" name="remember_me">
                             <label class="form-check-label" for="rememberMe">
@@ -102,98 +131,42 @@
                             </label>
                         </div>
 
-                        <!-- Submit Button -->
-                        <div class="d-grid gap-2 mb-3">
-                            <button type="submit" class="btn btn-primary btn-login">
-                                <i class="fas fa-sign-in-alt me-2"></i>
-                                Sign In
-                            </button>
-                        </div>
+                    <div class="mb-2 text-end">
+                        <a href="{% url 'password_reset' %}">Forgot password?</a>
+                    </div>
 
-                        <!-- Forgot Password Link -->
-                        <div class="text-center">
-                            <a href="{% url 'password_reset' %}" class="text-decoration-none">
-                                <i class="fas fa-question-circle me-1"></i>
-                                Forgot your password?
-                            </a>
-                        </div>
-                    </form>
-                </div>
-                
-                <!-- Sign Up Link -->
-                <div class="card-footer text-center py-3 bg-light">
-                    <small class="text-muted">
-                        Don't have an account? 
-                        <a href="{% url 'register' %}" class="text-decoration-none fw-bold">
-                            Sign up here
-                        </a>
-                    </small>
+                    <div class="d-grid mb-3">
+                        <button type="submit" class="btn btn-login">Sign In</button>
+                    </div>
+
+                    <div class="login-or">or</div>
+
+                    <div class="d-grid gap-2">
+                        <button type="button" class="btn btn-outline-dark">Sign in with Google</button>
+                        <button type="button" class="btn btn-outline-dark">Sign in with SSO</button>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <p class="mb-0 text-muted">Don't have an account? <a href="{% url 'register' %}">Sign up</a></p>
+                    </div>
+                </form>
+
+                <div class="login-footer-note mt-4">
+                    Trying to RSVP to an event? You don't need to register for a KhEC account. <a href="#">Learn more</a>
                 </div>
             </div>
+        </div>
 
-            <!-- Additional Info -->
-            <div class="text-center mt-4">
-                <small class="text-muted">
-                    <i class="fas fa-shield-alt me-1"></i>
-                    Your information is secure and protected
-                </small>
+        <div class="col-lg-6 d-none d-lg-flex align-items-center justify-content-center login-image-section">
+            <div>
+                <img src="{% static 'images/login.png' %}" alt="Login illustration" />
+                <h5 class="login-illustration-title mt-4">Welcome to KhEC Event Flow</h5>
+                <p class="login-illustration-text">
+                    One-stop solution for managing your event registrations.<br>
+                    From online registration to check-in, all at your fingertips.
+                </p>
             </div>
         </div>
     </div>
 </div>
-{% endblock %}
-
-{% block extra_js %}
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Toggle password visibility
-    const togglePassword = document.getElementById('togglePassword');
-    const passwordField = document.getElementById('id_password');
-    const toggleIcon = document.getElementById('toggleIcon');
-
-    if (togglePassword && passwordField && toggleIcon) {
-        togglePassword.addEventListener('click', function() {
-            const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordField.setAttribute('type', type);
-            
-            // Toggle icon
-            if (type === 'password') {
-                toggleIcon.classList.remove('fa-eye-slash');
-                toggleIcon.classList.add('fa-eye');
-            } else {
-                toggleIcon.classList.remove('fa-eye');
-                toggleIcon.classList.add('fa-eye-slash');
-            }
-        });
-    }
-
-    // Form validation
-    const form = document.querySelector('form');
-    if (form) {
-        form.addEventListener('submit', function(e) {
-            const username = document.getElementById('id_username').value.trim();
-            const password = document.getElementById('id_password').value;
-
-            if (!username) {
-                e.preventDefault();
-                alert('Please enter your username.');
-                return false;
-            }
-
-            if (!password) {
-                e.preventDefault();
-                alert('Please enter your password.');
-                return false;
-            }
-
-            // Show loading state
-            const submitBtn = form.querySelector('button[type="submit"]');
-            if (submitBtn) {
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Signing in...';
-                submitBtn.disabled = true;
-            }
-        });
-    }
-});
-</script>
 {% endblock %}
