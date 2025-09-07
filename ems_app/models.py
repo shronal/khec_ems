@@ -3,7 +3,10 @@ from django.urls import reverse
 from django.utils import timezone
 from django.core.validators import MinValueValidator, MaxValueValidator
 from users.models import CustomUser
+from django.contrib.auth.models import User
 import uuid
+from django.core.exceptions import ValidationError
+from django.utils.text import slugify
 
 class EventCategory(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -18,6 +21,17 @@ class EventCategory(models.Model):
     
     class Meta:
         verbose_name_plural = "Event Categories"
+        ordering = ['name']
+
+class EventLocation(models.Model):
+    name = models.CharField(max_length=100, unique=True)  # e.g., Hall1, Hall2
+    description = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name_plural = "Event Locations"
         ordering = ['name']
 
 class EventTemplate(models.Model):
@@ -55,11 +69,18 @@ class Event(models.Model):
     slug = models.SlugField(unique=True, blank=True, null=True)
     description = models.TextField()
     short_description = models.CharField(max_length=300, blank=True)
-    category = models.ForeignKey(EventCategory, on_delete=models.CASCADE, related_name='events')
-    organizer = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='organized_events')
+    category = models.ForeignKey('EventCategory', on_delete=models.CASCADE, related_name='events')
+    from django.conf import settings
+
+    organizer = models.ForeignKey(
+    settings.AUTH_USER_MODEL,
+    on_delete=models.CASCADE,
+    related_name='organized_events'
+)
+
     
     # Location and Time
-    location = models.CharField(max_length=200)
+    location = models.ForeignKey(EventLocation, on_delete=models.CASCADE, related_name='events')
     venue_details = models.TextField(blank=True, help_text='Additional venue information')
     latitude = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)
     longitude = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)
@@ -102,13 +123,38 @@ class Event(models.Model):
     meta_description = models.CharField(max_length=160, blank=True)
     meta_keywords = models.CharField(max_length=255, blank=True)
     
+    class Meta:
+        ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['status', 'start_date']),
+            models.Index(fields=['category', 'start_date']),
+            models.Index(fields=['organizer', '-created_at']),
+        ]
+
     def __str__(self):
         return self.title
-    
+
+    # Validation to prevent overlapping events at the same location
+    def clean(self):
+        overlapping = Event.objects.filter(
+            location=self.location,
+            end_date__gte=self.start_date,
+            start_date__lte=self.end_date
+        )
+        if self.pk:
+            overlapping = overlapping.exclude(pk=self.pk)
+
+        if overlapping.exists():
+            raise ValidationError(
+                f"{self.location} is already booked between {self.start_date} and {self.end_date}."
+            )
+
+    # Save method with slug, short description, and validation
     def save(self, *args, **kwargs):
+        self.full_clean()  # triggers clean() for clash prevention
+
         # Generate slug if not provided
         if not self.slug:
-            from django.utils.text import slugify
             base_slug = slugify(self.title)
             slug = base_slug
             counter = 1
@@ -116,13 +162,14 @@ class Event(models.Model):
                 slug = f"{base_slug}-{counter}"
                 counter += 1
             self.slug = slug
-        
+
         # Set short description if not provided
         if not self.short_description:
             self.short_description = self.description[:297] + "..." if len(self.description) > 300 else self.description
-        
+
         super().save(*args, **kwargs)
-    
+
+    # Utility methods
     def get_absolute_url(self):
         return reverse('event-detail', kwargs={'slug': self.slug})
     
