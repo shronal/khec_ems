@@ -8,7 +8,8 @@ from ems_app.views import home
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home, name='home'),
-    path('events/', include('ems_app.urls')),  
+    path('events/', include('ems_app.urls')), 
+    path("", include("ems_app.urls")), 
     path('users/', include('users.urls')),
      # Password reset links
     path('password_reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),

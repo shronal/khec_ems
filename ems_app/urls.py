@@ -28,4 +28,6 @@ urlpatterns = [
     
     # Admin functions
     path('admin/event/<int:pk>/approval/', views.event_approval, name='event-approval'),
+
+    path("api/check_overlap/", views.check_overlap, name="check_overlap"),
 ]
