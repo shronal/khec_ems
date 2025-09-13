@@ -9,11 +9,11 @@
         <div class="col-lg-8">
             <!-- Event Details -->
             <div class="card mb-4">
-                {% if event.image %}
-                    <img src="{{ event.image.url }}" class="card-img-top" alt="{{ event.title }}" style="max-height: 400px; object-fit: cover;">
-                {% else %}
-                    <img src="https://via.placeholder.com/800x400?text=Event" class="card-img-top" alt="{{ event.title }}">
-                {% endif %}
+               {% if event.featured_image %}
+                            <img src="{{ event.featured_image.url }}" class="card-img-top" alt="{{ event.title }}" style="height: 200px; object-fit: cover;">
+                        {% else %}
+                            <img src="https://via.placeholder.com/300x200?text=Event" class="card-img-top" alt="{{ event.title }}">
+                        {% endif %}
                 <div class="card-body">
                     <h1 class="card-title">{{ event.title }}</h1>
                     
