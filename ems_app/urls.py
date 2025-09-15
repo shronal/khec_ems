@@ -2,8 +2,9 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    path('about/', views.about_us, name='about-us'),
     # Event listing and details
-    path('', views.EventListView.as_view(), name='event-list'),
+    path('events/', views.EventListView.as_view(), name='event-list'),
     path('event/<slug:slug>/', views.EventDetailView.as_view(), name='event-detail'),
     
     # Event management

@@ -81,6 +81,14 @@ def home(request):
     }
     return render(request, 'events/home.html', context)
 
+
+def about_us(request):
+    """About Us page view"""
+    context = {
+        'page_title': 'About Us - KhEC Event Flow',
+    }
+    return render(request, 'events/about_us.html', context)
+
 class EventListView(ListView):
     model = Event
     template_name = 'events/event_list.html'
