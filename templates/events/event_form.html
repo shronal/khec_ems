@@ -8,61 +8,309 @@
 {% block content %}
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-lg-8">
+        <div class="col-lg-10">
             <div class="card">
                 <div class="card-header">
                     <h2>{% if form.instance.pk %}Edit Event{% else %}Create New Event{% endif %}</h2>
                 </div>
                 <div class="card-body">
-                    <form method="post" enctype="multipart/form-data">
+                    <!-- Category Creation Alert -->
+                    {% if not form.category.field.queryset %}
+                        <div class="alert alert-warning" role="alert">
+                            <h4 class="alert-heading">No Categories Available!</h4>
+                            <p>There are no event categories available. Please contact an administrator to create categories first.</p>
+                            <hr>
+                            <p class="mb-0">Categories help organize events and make them easier to find for participants.</p>
+                        </div>
+                    {% endif %}
+
+                    <form method="post" enctype="multipart/form-data" id="eventForm">
                         {% csrf_token %}
                         
-                        <div class="row">
-                            <div class="col-md-12 mb-3">
-                                {{ form.title|as_crispy_field }}
+                        <!-- Basic Information Section -->
+                        <div class="mb-4">
+                            <h5 class="text-muted mb-3">
+                                <i class="fas fa-info-circle me-2"></i>Basic Information
+                            </h5>
+                            
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
+                                    <label for="{{ form.title.id_for_label }}" class="form-label">{{ form.title.label }} <span class="text-danger">*</span></label>
+                                    {{ form.title }}
+                                    {% if form.title.errors %}
+                                        <div class="text-danger">{{ form.title.errors }}</div>
+                                    {% endif %}
+                                    <div class="form-text">Choose a clear, descriptive title for your event</div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.category.id_for_label }}" class="form-label">{{ form.category.label }} <span class="text-danger">*</span></label>
+                                    {{ form.category }}
+                                    {% if form.category.errors %}
+                                        <div class="text-danger">{{ form.category.errors }}</div>
+                                    {% endif %}
+                                    <div class="form-text">
+                                        Select the most appropriate category for your event
+                                        {% if user.is_admin_user %}
+                                            <br><small><a href="/admin/ems_app/eventcategory/" target="_blank">Manage Categories</a></small>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.priority.id_for_label }}" class="form-label">{{ form.priority.label }}</label>
+                                    {{ form.priority }}
+                                    {% if form.priority.errors %}
+                                        <div class="text-danger">{{ form.priority.errors }}</div>
+                                    {% endif %}
+                                    <div class="form-text">Set the priority level for this event</div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
+                                    <label for="{{ form.short_description.id_for_label }}" class="form-label">{{ form.short_description.label }}</label>
+                                    {{ form.short_description }}
+                                    {% if form.short_description.errors %}
+                                        <div class="text-danger">{{ form.short_description.errors }}</div>
+                                    {% endif %}
+                                    <div class="form-text">Brief description for event listings (max 300 characters) <span id="short-desc-counter"></span></div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
+                                    <label for="{{ form.description.id_for_label }}" class="form-label">{{ form.description.label }} <span class="text-danger">*</span></label>
+                                    {{ form.description }}
+                                    {% if form.description.errors %}
+                                        <div class="text-danger">{{ form.description.errors }}</div>
+                                    {% endif %}
+                                    <div class="form-text">Detailed description of the event, including what participants can expect</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Location & Time Section -->
+                        <div class="mb-4">
+                            <h5 class="text-muted mb-3">
+                                <i class="fas fa-map-marker-alt me-2"></i>Location & Time
+                            </h5>
+                            
+                            <div class="row">
+                                <div class="col-md-8 mb-3">
+                                    <label for="{{ form.location.id_for_label }}" class="form-label">{{ form.location.label }} <span class="text-danger">*</span></label>
+                                    {{ form.location }}
+                                    {% if form.location.errors %}
+                                        <div class="text-danger">{{ form.location.errors }}</div>
+                                    {% endif %}
+                                    <div class="form-text">Specify the venue or location where the event will take place</div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="form-check mt-4">
+                                        {{ form.is_featured }}
+                                        <label class="form-check-label" for="{{ form.is_featured.id_for_label }}">
+                                            {{ form.is_featured.label }}
+                                        </label>
+                                        <div class="form-text">Featured events appear prominently on the homepage</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
+                                    <label for="{{ form.venue_details.id_for_label }}" class="form-label">{{ form.venue_details.label }}</label>
+                                    {{ form.venue_details }}
+                                    {% if form.venue_details.errors %}
+                                        <div class="text-danger">{{ form.venue_details.errors }}</div>
+                                    {% endif %}
+                                    <div class="form-text">Additional venue information like room number, floor, landmarks, etc.</div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label for="{{ form.start_date.id_for_label }}" class="form-label">{{ form.start_date.label }} <span class="text-danger">*</span></label>
+                                    {{ form.start_date }}
+                                    {% if form.start_date.errors %}
+                                        <div class="text-danger">{{ form.start_date.errors }}</div>
+                                    {% endif %}
+                                    <div class="form-text">When the event begins</div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="{{ form.end_date.id_for_label }}" class="form-label">{{ form.end_date.label }} <span class="text-danger">*</span></label>
+                                    {{ form.end_date }}
+                                    {% if form.end_date.errors %}
+                                        <div class="text-danger">{{ form.end_date.errors }}</div>
+                                    {% endif %}
+                                    <div class="form-text">When the event ends</div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="{{ form.registration_deadline.id_for_label }}" class="form-label">{{ form.registration_deadline.label }} <span class="text-danger">*</span></label>
+                                    {{ form.registration_deadline }}
+                                    {% if form.registration_deadline.errors %}
+                                        <div class="text-danger">{{ form.registration_deadline.errors }}</div>
+                                    {% endif %}
+                                    <div class="form-text">Last date for registration</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Registration & Capacity Section -->
+                        <div class="mb-4">
+                            <h5 class="text-muted mb-3">
+                                <i class="fas fa-users me-2"></i>Registration & Capacity
+                            </h5>
+                            
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label for="{{ form.max_participants.id_for_label }}" class="form-label">{{ form.max_participants.label }}</label>
+                                    {{ form.max_participants }}
+                                    {% if form.max_participants.errors %}
+                                        <div class="text-danger">{{ form.max_participants.errors }}</div>
+                                    {% endif %}
+                                    <div class="form-text">0 means unlimited capacity</div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="{{ form.min_participants.id_for_label }}" class="form-label">{{ form.min_participants.label }}</label>
+                                    {{ form.min_participants }}
+                                    {% if form.min_participants.errors %}
+                                        <div class="text-danger">{{ form.min_participants.errors }}</div>
+                                    {% endif %}
+                                    <div class="form-text">Minimum participants needed</div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="form-check mt-4">
+                                        {{ form.is_free }}
+                                        <label class="form-check-label" for="{{ form.is_free.id_for_label }}">
+                                            {{ form.is_free.label }}
+                                        </label>
+                                        <div class="form-text">Check if this is a free event</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.registration_fee.id_for_label }}" class="form-label">{{ form.registration_fee.label }}</label>
+                                    {{ form.registration_fee }}
+                                    {% if form.registration_fee.errors %}
+                                        <div class="text-danger">{{ form.registration_fee.errors }}</div>
+                                    {% endif %}
+                                    <div class="form-text">Leave as 0.00 for free events</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Event Details Section -->
+                        <div class="mb-4">
+                            <h5 class="text-muted mb-3">
+                                <i class="fas fa-clipboard-list me-2"></i>Event Details
+                            </h5>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.contact_email.id_for_label }}" class="form-label">{{ form.contact_email.label }}</label>
+                                    {{ form.contact_email }}
+                                    {% if form.contact_email.errors %}
+                                        <div class="text-danger">{{ form.contact_email.errors }}</div>
+                                    {% endif %}
+                                    <div class="form-text">Contact email for inquiries</div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.contact_phone.id_for_label }}" class="form-label">{{ form.contact_phone.label }}</label>
+                                    {{ form.contact_phone }}
+                                    {% if form.contact_phone.errors %}
+                                        <div class="text-danger">{{ form.contact_phone.errors }}</div>
+                                    {% endif %}
+                                    <div class="form-text">Contact phone number</div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.requirements.id_for_label }}" class="form-label">{{ form.requirements.label }}</label>
+                                    {{ form.requirements }}
+                                    {% if form.requirements.errors %}
+                                        <div class="text-danger">{{ form.requirements.errors }}</div>
+                                    {% endif %}
+                                    <div class="form-text">What participants need to bring/know (e.g., laptop, notebook, prior knowledge)</div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.agenda.id_for_label }}" class="form-label">{{ form.agenda.label }}</label>
+                                    {{ form.agenda }}
+                                    {% if form.agenda.errors %}
+                                        <div class="text-danger">{{ form.agenda.errors }}</div>
+                                    {% endif %}
+                                    <div class="form-text">Event schedule/agenda (e.g., 9:00 AM - Registration, 10:00 AM - Session 1)</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Media Section -->
+                        <div class="mb-4">
+                            <h5 class="text-muted mb-3">
+                                <i class="fas fa-images me-2"></i>Media
+                            </h5>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.featured_image.id_for_label }}" class="form-label">{{ form.featured_image.label }}</label>
+                                    {{ form.featured_image }}
+                                    {% if form.featured_image.errors %}
+                                        <div class="text-danger">{{ form.featured_image.errors }}</div>
+                                    {% endif %}
+                                    <div class="form-text">Main event image for listings (recommended: 800x400px)</div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.banner_image.id_for_label }}" class="form-label">{{ form.banner_image.label }}</label>
+                                    {{ form.banner_image }}
+                                    {% if form.banner_image.errors %}
+                                        <div class="text-danger">{{ form.banner_image.errors }}</div>
+                                    {% endif %}
+                                    <div class="form-text">Banner image for event detail page (recommended: 1200x400px)</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SEO Section (Optional) -->
+                        <div class="mb-4">
+                            <h5 class="text-muted mb-3">
+                                <i class="fas fa-search me-2"></i>SEO (Optional)
+                            </h5>
+                            
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
+                                    <label for="{{ form.meta_description.id_for_label }}" class="form-label">{{ form.meta_description.label }}</label>
+                                    {{ form.meta_description }}
+                                    {% if form.meta_description.errors %}
+                                        <div class="text-danger">{{ form.meta_description.errors }}</div>
+                                    {% endif %}
+                                    <div class="form-text">Meta description for search engines (max 160 characters) <span id="meta-desc-counter"></span></div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
+                                    <label for="{{ form.meta_keywords.id_for_label }}" class="form-label">{{ form.meta_keywords.label }}</label>
+                                    {{ form.meta_keywords }}
+                                    {% if form.meta_keywords.errors %}
+                                        <div class="text-danger">{{ form.meta_keywords.errors }}</div>
+                                    {% endif %}
+                                    <div class="form-text">Keywords separated by commas (e.g., workshop, technology, programming)</div>
+                                </div>
                             </div>
                         </div>
                         
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                {{ form.category|as_crispy_field }}
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                {{ form.location|as_crispy_field }}
-                            </div>
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col-md-4 mb-3">
-                                {{ form.start_date|as_crispy_field }}
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                {{ form.end_date|as_crispy_field }}
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                {{ form.registration_deadline|as_crispy_field }}
-                            </div>
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                {{ form.max_participants|as_crispy_field }}
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                {{ form.image|as_crispy_field }}
-                            </div>
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col-md-12 mb-3">
-                                {{ form.description|as_crispy_field }}
-                            </div>
-                        </div>
-                        
+                        <!-- Form Actions -->
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                             <a href="{% url 'event-list' %}" class="btn btn-outline-secondary me-md-2">Cancel</a>
-                            <button type="submit" class="btn btn-primary">
-                                {% if form.instance.pk %}Update Event{% else %}Create Event{% endif %}
+                            <button type="submit" class="btn btn-primary" id="submitBtn">
+                                {% if form.instance.pk %}
+                                    <i class="fas fa-save me-2"></i>Update Event
+                                {% else %}
+                                    <i class="fas fa-plus me-2"></i>Create Event
+                                {% endif %}
                             </button>
                         </div>
                     </form>
@@ -71,4 +319,132 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Character counter for short description
+    const shortDescField = document.getElementById('{{ form.short_description.id_for_label }}');
+    const shortDescCounter = document.getElementById('short-desc-counter');
+    if (shortDescField && shortDescCounter) {
+        const maxLength = 300;
+        
+        function updateShortDescCounter() {
+            const remaining = maxLength - shortDescField.value.length;
+            shortDescCounter.textContent = `(${remaining} characters remaining)`;
+            shortDescCounter.className = remaining < 50 ? 'text-warning' : 'text-muted';
+        }
+        
+        shortDescField.addEventListener('input', updateShortDescCounter);
+        updateShortDescCounter();
+    }
+    
+    // Character counter for meta description
+    const metaDescField = document.getElementById('{{ form.meta_description.id_for_label }}');
+    const metaDescCounter = document.getElementById('meta-desc-counter');
+    if (metaDescField && metaDescCounter) {
+        const maxLength = 160;
+        
+        function updateMetaDescCounter() {
+            const remaining = maxLength - metaDescField.value.length;
+            metaDescCounter.textContent = `(${remaining} characters remaining)`;
+            metaDescCounter.className = remaining < 20 ? 'text-warning' : 'text-muted';
+        }
+        
+        metaDescField.addEventListener('input', updateMetaDescCounter);
+        updateMetaDescCounter();
+    }
+    
+    // Toggle registration fee field based on is_free checkbox
+    const isFreeCheckbox = document.getElementById('{{ form.is_free.id_for_label }}');
+    const registrationFeeField = document.getElementById('{{ form.registration_fee.id_for_label }}');
+    
+    if (isFreeCheckbox && registrationFeeField) {
+        function toggleFeeField() {
+            if (isFreeCheckbox.checked) {
+                registrationFeeField.value = '0.00';
+                registrationFeeField.disabled = true;
+                registrationFeeField.parentNode.style.opacity = '0.5';
+            } else {
+                registrationFeeField.disabled = false;
+                registrationFeeField.parentNode.style.opacity = '1';
+            }
+        }
+        
+        isFreeCheckbox.addEventListener('change', toggleFeeField);
+        toggleFeeField(); // Initial state
+    }
+    
+    // Form validation
+    const form = document.getElementById('eventForm');
+    const submitBtn = document.getElementById('submitBtn');
+    
+    form.addEventListener('submit', function(e) {
+        const startDate = new Date(document.getElementById('{{ form.start_date.id_for_label }}').value);
+        const endDate = new Date(document.getElementById('{{ form.end_date.id_for_label }}').value);
+        const regDeadline = new Date(document.getElementById('{{ form.registration_deadline.id_for_label }}').value);
+        const now = new Date();
+        
+        let hasErrors = false;
+        let errorMessage = '';
+        
+        if (startDate >= endDate) {
+            hasErrors = true;
+            errorMessage += 'End date must be after start date.\n';
+        }
+        
+        if (regDeadline >= startDate) {
+            hasErrors = true;
+            errorMessage += 'Registration deadline must be before the event starts.\n';
+        }
+        
+        if (startDate <= now) {
+            hasErrors = true;
+            errorMessage += 'Start date must be in the future.\n';
+        }
+        
+        if (hasErrors) {
+            e.preventDefault();
+            alert(errorMessage);
+            return false;
+        }
+        
+        // Show loading state
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Saving...';
+        submitBtn.disabled = true;
+    });
+    
+    // Auto-fill contact email with user's email if empty
+    const contactEmailField = document.getElementById('{{ form.contact_email.id_for_label }}');
+    if (contactEmailField && !contactEmailField.value) {
+        {% if user.email %}
+            contactEmailField.value = '{{ user.email }}';
+        {% endif %}
+    }
+    
+    // Set default registration deadline to 1 day before start date
+    const startDateField = document.getElementById('{{ form.start_date.id_for_label }}');
+    const regDeadlineField = document.getElementById('{{ form.registration_deadline.id_for_label }}');
+    
+    if (startDateField && regDeadlineField) {
+        startDateField.addEventListener('change', function() {
+            if (this.value && !regDeadlineField.value) {
+                const startDate = new Date(this.value);
+                const regDeadline = new Date(startDate);
+                regDeadline.setDate(regDeadline.getDate() - 1);
+                
+                // Format date for datetime-local input
+                const year = regDeadline.getFullYear();
+                const month = String(regDeadline.getMonth() + 1).padStart(2, '0');
+                const day = String(regDeadline.getDate()).padStart(2, '0');
+                const hours = String(regDeadline.getHours()).padStart(2, '0');
+                const minutes = String(regDeadline.getMinutes()).padStart(2, '0');
+                
+                regDeadlineField.value = `${year}-${month}-${day}T${hours}:${minutes}`;
+            }
+        });
+    }
+});
+</script>
 {% endblock %}

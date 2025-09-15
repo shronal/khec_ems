@@ -1,128 +1,111 @@
 {% extends 'base.html' %}
-{% load crispy_forms_tags %}
-
 {% block title %}Profile - KhEC Event Flow{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="row">
-        <div class="col-md-4 mb-4">
-            <div class="card">
-                <div class="card-header">
-                    <h4>Profile Information</h4>
-                </div>
-                <div class="card-body text-center">
+<div class="container" style="max-width: 1000px; margin: auto; padding: 20px;">
+    <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+        <!-- Profile Summary Section -->
+        <div style="flex: 1; min-width: 280px;">
+            <div style="border: 1px solid #ddd; padding: 20px; border-radius: 5px;">
+                <h4>Profile Information</h4>
+                <div style="text-align: center;">
                     {% if user.profile_picture %}
-                        <img src="{{ user.profile_picture.url }}" alt="{{ user.username }}" class="rounded-circle img-fluid mb-3" style="width: 150px; height: 150px; object-fit: cover;">
+                        <img src="{{ user.profile_picture.url }}" alt="{{ user.username }}" style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%; margin-bottom: 10px;">
                     {% else %}
-                        <img src="https://via.placeholder.com/150?text={{ user.username|first|upper }}" alt="{{ user.username }}" class="rounded-circle img-fluid mb-3">
+                        <img src="https://via.placeholder.com/150?text={{ user.username|first|upper }}" alt="{{ user.username }}" style="width: 150px; height: 150px; border-radius: 50%; margin-bottom: 10px;">
                     {% endif %}
-                    
+
                     <h5>{{ user.get_full_name|default:user.username }}</h5>
-                    <p class="text-muted">{{ user.get_user_type_display }}</p>
-                    
-                    <div class="text-start mt-3">
-                        <p><i class="fas fa-envelope me-2"></i>{{ user.email }}</p>
-                        <p><i class="fas fa-phone me-2"></i>{{ user.phone_number|default:"Not provided" }}</p>
-                        <p><i class="fas fa-calendar-alt me-2"></i>Joined: {{ user.date_joined|date:"F j, Y" }}</p>
+                    <p style="color: #777;">{{ user.get_user_type_display }}</p>
+
+                    <div style="text-align: left; margin-top: 15px;">
+                        <p>Email: {{ user.email }}</p>
+                        <p>Phone: {{ user.phone_number|default:"Not provided" }}</p>
+                        <p>Joined: {{ user.date_joined|date:"F j, Y" }}</p>
                     </div>
                 </div>
             </div>
-            
-            <div class="card mt-4">
-                <div class="card-header">
-                    <h4>Account Statistics</h4>
-                </div>
-                <div class="card-body">
-                    <div class="row text-center">
-                        <div class="col-6 mb-3">
-                            <h5>{{ user.event_registrations.count }}</h5>
-                            <p class="text-muted">Registrations</p>
-                        </div>
-                        <div class="col-6 mb-3">
-                            <h5>{{ user.organized_events.count }}</h5>
-                            <p class="text-muted">Organized Events</p>
-                        </div>
+
+            <div style="border: 1px solid #ddd; padding: 20px; margin-top: 20px; border-radius: 5px;">
+                <h4>Account Statistics</h4>
+                <div style="display: flex; justify-content: space-around; margin-top: 10px;">
+                    <div style="text-align: center;">
+                        <strong>{{ user.event_registrations.count }}</strong>
+                        <p style="color: #777;">Registrations</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <strong>{{ user.organized_events.count }}</strong>
+                        <p style="color: #777;">Organized Events</p>
                     </div>
                 </div>
             </div>
         </div>
-        
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
-                    <h4>Edit Profile</h4>
-                </div>
-                <div class="card-body">
-                    <form method="post" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                {{ form.first_name|as_crispy_field }}
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                {{ form.last_name|as_crispy_field }}
-                            </div>
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                {{ form.email|as_crispy_field }}
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                {{ form.phone_number|as_crispy_field }}
-                            </div>
-                        </div>
-                        
-                        <div class="mb-3">
-                            {{ form.profile_picture|as_crispy_field }}
-                        </div>
-                        
-                        <div class="mb-3">
-                            {{ form.bio|as_crispy_field }}
-                        </div>
-                        
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary">Update Profile</button>
-                        </div>
-                    </form>
-                </div>
+
+        <!-- Edit Profile Form Section -->
+        <div style="flex: 2; min-width: 300px;">
+            <div style="border: 1px solid #ddd; padding: 20px; border-radius: 5px;">
+                <h4>Edit Profile</h4>
+
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <div style="margin-bottom: 15px;">
+                        <label for="{{ form.first_name.id_for_label }}">First Name</label><br>
+                        {{ form.first_name }}<br>
+                        {{ form.first_name.errors }}
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <label for="{{ form.last_name.id_for_label }}">Last Name</label><br>
+                        {{ form.last_name }}<br>
+                        {{ form.last_name.errors }}
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <label for="{{ form.email.id_for_label }}">Email</label><br>
+                        {{ form.email }}<br>
+                        {{ form.email.errors }}
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <label for="{{ form.phone_number.id_for_label }}">Phone Number</label><br>
+                        {{ form.phone_number }}<br>
+                        {{ form.phone_number.errors }}
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <label for="{{ form.profile_picture.id_for_label }}">Profile Picture</label><br>
+                        {{ form.profile_picture }}<br>
+                        {{ form.profile_picture.errors }}
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <label for="{{ form.bio.id_for_label }}">Bio</label><br>
+                        {{ form.bio }}<br>
+                        {{ form.bio.errors }}
+                    </div>
+
+                    <div>
+                        <button type="submit" style="padding: 10px 20px; background-color: #007bff; border: none; color: white; cursor: pointer;">
+                            Update Profile
+                        </button>
+                    </div>
+                </form>
             </div>
-            
+
             {% if user.is_organizer %}
-                <div class="card mt-4">
-                    <div class="card-header">
-                        <h4>Organizer Tools</h4>
-                    </div>
-                    <div class="card-body">
-                        <div class="d-grid gap-2">
-                            <a href="{% url 'organizer-dashboard' %}" class="btn btn-outline-primary">
-                                <i class="fas fa-tachometer-alt me-2"></i>Organizer Dashboard
-                            </a>
-                            <a href="{% url 'event-create' %}" class="btn btn-outline-success">
-                                <i class="fas fa-plus-circle me-2"></i>Create New Event
-                            </a>
-                        </div>
-                    </div>
+                <div style="border: 1px solid #ddd; padding: 20px; margin-top: 20px; border-radius: 5px;">
+                    <h4>Organizer Tools</h4>
+                    <a href="{% url 'organizer-dashboard' %}" style="display: block; margin-bottom: 10px;">Organizer Dashboard</a>
+                    <a href="{% url 'event-create' %}" style="display: block;">Create New Event</a>
                 </div>
             {% endif %}
-            
+
             {% if user.is_admin_user %}
-                <div class="card mt-4">
-                    <div class="card-header">
-                        <h4>Admin Tools</h4>
-                    </div>
-                    <div class="card-body">
-                        <div class="d-grid gap-2">
-                            <a href="{% url 'admin-dashboard' %}" class="btn btn-outline-primary">
-                                <i class="fas fa-tachometer-alt me-2"></i>Admin Dashboard
-                            </a>
-                            <a href="/admin/" class="btn btn-outline-secondary">
-                                <i class="fas fa-cog me-2"></i>Django Admin
-                            </a>
-                        </div>
-                    </div>
+                <div style="border: 1px solid #ddd; padding: 20px; margin-top: 20px; border-radius: 5px;">
+                    <h4>Admin Tools</h4>
+                    <a href="{% url 'admin-dashboard' %}" style="display: block; margin-bottom: 10px;">Admin Dashboard</a>
+                    <a href="/admin/" style="display: block;">Django Admin</a>
                 </div>
             {% endif %}
         </div>

@@ -7,6 +7,6 @@ from ems_app.views import home
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home, name='home'),
-    path('events/', include('ems_app.urls')),
+    path('events/', include('ems_app.urls')),  
     path('users/', include('users.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
