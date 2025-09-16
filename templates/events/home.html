@@ -1,9 +1,44 @@
 {% extends 'base.html' %}
 
 {% block title %}KhEC Event Flow - Home{% endblock %}
-
+{% load static%}
 {% block extra_css %}
 <style>
+
+    html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+.welcome {
+  background-image: url("/static/images/misson.svg");
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  color: white;
+  text-align: center;
+}
+
+.welcome-overlay {
+  background-color: rgba(0, 0, 0, 0.4); /* Semi-transparent overlay */
+  padding: 40px;
+  border-radius: 8px;
+
+}
+
+.welcome-overlay h1 {
+  font-size: 3rem;
+  margin-bottom: 20px;
+}
+
+.welcome-overlay p {
+  font-size: 1.5rem;
+}
+
     .circle-img {
   width: 300;     /* Adjust size as needed */
   height: 280px;    /* Make sure height = width */
@@ -14,7 +49,14 @@
 </style>
 {% endblock%}
 {% block content %}
-{% load static%}
+
+<div class="welcome" style="background-image: url('{% static 'images/download.jpeg' %}');">
+  <div class="welcome-overlay">
+    <h1>Welcome to Khwopa Event Management System</h1>
+    <p>Seamlessly manage and organize events with ease.</p>
+  </div>
+</div>
+
 <div class="container">
     <!-- Hero Section -->
     <div class="row align-items-center py-5">
@@ -22,7 +64,6 @@
             <h1 style="color: #2b2069ff; font-family: Helvetica; font-weight: 500;">
   Create any event easily. <br>Control every detail.
 </h1>
-
             <p class="lead">Discover, participate, and organize events at Khwopa Engineering College.</p>
 
             <div class="d-grid gap-2 d-md-flex justify-content-md-start">
