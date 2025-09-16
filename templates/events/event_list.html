@@ -204,10 +204,11 @@
     {% if user.is_authenticated and user.is_organizer or user.is_admin_user %}
         <div class="text-center mt-4">
             <a href="{% url 'event-create' %}" class="btn btn-success btn-lg">
-                <i class="fas fa-plus-circle me-2"></i>Create New Event
+                <i class="fas fa-plus-circle me-2"></i> Create New Event
             </a>
         </div>
     {% endif %}
+    <br><br>
 </div>
 {% endblock %}
 

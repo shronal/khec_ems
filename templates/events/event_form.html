@@ -4,6 +4,137 @@
 {% block title %}
     {% if form.instance.pk %}Edit Event{% else %}Create Event{% endif %} - KhEC Event Flow
 {% endblock %}
+{% block extra_css %}
+    <!-- Add your custom theme CSS here -->
+<style>
+/* Reset/normalize */
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+}
+
+.card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    border: none;
+    margin-bottom: 40px;
+}
+
+.card-header {
+    background: #fff;
+    border-bottom: 1px solid #eee;
+    padding: 24px 32px;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+}
+
+.card-header h2 {
+    color: #4b2e83;
+    margin: 0;
+    font-size: 1.6rem;
+}
+
+/* Section headers */
+h5.text-muted {
+    background: #f2effc;
+    color: #4b2e83;
+    padding: 10px 16px;
+    border-left: 4px solid #4b2e83;
+    margin-bottom: 20px;
+    border-radius: 6px;
+    font-weight: 600;
+}
+
+/* Form labels and fields */
+.form-label {
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.form-control {
+    border-radius: 10px;
+    border: 1px solid #ced4da;
+    padding: 10px 12px;
+    transition: all 0.3s ease;
+    box-shadow: none;
+}
+
+.form-control:focus {
+    border-color: #4b2e83;
+    box-shadow: 0 0 0 3px rgba(75, 46, 131, 0.15);
+}
+
+.form-text {
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: #4b2e83;
+    border: none;
+    font-weight: 600;
+    padding: 10px 24px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #3a2168;
+}
+
+.btn-outline-secondary {
+    border: 2px solid #6c757d;
+    color: #6c757d;
+    border-radius: 8px;
+    padding: 10px 24px;
+}
+
+.btn-outline-secondary:hover {
+    background-color: #e2e6ea;
+}
+
+/* Alerts */
+.alert {
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 20px;
+}
+
+.alert-warning {
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+    color: #856404;
+}
+
+/* Form Sections */
+.mb-4 {
+    padding: 20px 0;
+    border-bottom: 1px dashed #ddd;
+}
+
+.d-grid button {
+    min-width: 160px;
+}
+
+@media (max-width: 768px) {
+    .card-header h2 {
+        font-size: 1.3rem;
+    }
+    .btn {
+        width: 100%;
+        margin-top: 10px;
+    }
+}
+</style>
+
+{% endblock %}
 
 {% block content %}
 <div class="container">
@@ -91,70 +222,108 @@
                             </div>
                         </div>
 
-                        <!-- Location & Time Section -->
-                        <div class="mb-4">
-                            <h5 class="text-muted mb-3">
-                                <i class="fas fa-map-marker-alt me-2"></i>Location & Time
-                            </h5>
-                            
-                            <div class="row">
-                                <div class="col-md-8 mb-3">
-                                    <label for="{{ form.location.id_for_label }}" class="form-label">{{ form.location.label }} <span class="text-danger">*</span></label>
-                                    {{ form.location }}
-                                    {% if form.location.errors %}
-                                        <div class="text-danger">{{ form.location.errors }}</div>
-                                    {% endif %}
-                                    <div class="form-text">Specify the venue or location where the event will take place</div>
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    <div class="form-check mt-4">
-                                        {{ form.is_featured }}
-                                        <label class="form-check-label" for="{{ form.is_featured.id_for_label }}">
-                                            {{ form.is_featured.label }}
-                                        </label>
-                                        <div class="form-text">Featured events appear prominently on the homepage</div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="row">
-                                <div class="col-md-12 mb-3">
-                                    <label for="{{ form.venue_details.id_for_label }}" class="form-label">{{ form.venue_details.label }}</label>
-                                    {{ form.venue_details }}
-                                    {% if form.venue_details.errors %}
-                                        <div class="text-danger">{{ form.venue_details.errors }}</div>
-                                    {% endif %}
-                                    <div class="form-text">Additional venue information like room number, floor, landmarks, etc.</div>
-                                </div>
-                            </div>
-                            
-                            <div class="row">
-                                <div class="col-md-4 mb-3">
-                                    <label for="{{ form.start_date.id_for_label }}" class="form-label">{{ form.start_date.label }} <span class="text-danger">*</span></label>
-                                    {{ form.start_date }}
-                                    {% if form.start_date.errors %}
-                                        <div class="text-danger">{{ form.start_date.errors }}</div>
-                                    {% endif %}
-                                    <div class="form-text">When the event begins</div>
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    <label for="{{ form.end_date.id_for_label }}" class="form-label">{{ form.end_date.label }} <span class="text-danger">*</span></label>
-                                    {{ form.end_date }}
-                                    {% if form.end_date.errors %}
-                                        <div class="text-danger">{{ form.end_date.errors }}</div>
-                                    {% endif %}
-                                    <div class="form-text">When the event ends</div>
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    <label for="{{ form.registration_deadline.id_for_label }}" class="form-label">{{ form.registration_deadline.label }} <span class="text-danger">*</span></label>
-                                    {{ form.registration_deadline }}
-                                    {% if form.registration_deadline.errors %}
-                                        <div class="text-danger">{{ form.registration_deadline.errors }}</div>
-                                    {% endif %}
-                                    <div class="form-text">Last date for registration</div>
-                                </div>
-                            </div>
-                        </div>
+                       <!-- Location & Time Section -->
+<div class="mb-4">
+    <h5 class="text-muted mb-3">
+        <i class="fas fa-map-marker-alt me-2"></i>Location & Time
+    </h5>
+
+    <!-- Non-field errors (like overlap) -->
+    {% if form.non_field_errors %}
+        <div class="alert alert-danger">
+            {% for error in form.non_field_errors %}
+                {{ error }}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label for="{{ form.location.id_for_label }}" class="form-label">
+                {{ form.location.label }} <span class="text-danger">*</span>
+            </label>
+            {{ form.location }}
+            {% if form.location.errors %}
+                <div class="text-danger">
+                    {% for error in form.location.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <div class="form-text">Select a hall. Overlapping bookings are not allowed.</div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <div class="form-check mt-4">
+                {{ form.is_featured }}
+                <label class="form-check-label" for="{{ form.is_featured.id_for_label }}">
+                    {{ form.is_featured.label }}
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 mb-3">
+            <label for="{{ form.venue_details.id_for_label }}" class="form-label">
+                {{ form.venue_details.label }}
+            </label>
+            {{ form.venue_details }}
+            {% if form.venue_details.errors %}
+                <div class="text-danger">
+                    {% for error in form.venue_details.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <div class="form-text">Extra info like room number, floor, landmarks</div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <label for="{{ form.start_date.id_for_label }}" class="form-label">
+                {{ form.start_date.label }} <span class="text-danger">*</span>
+            </label>
+            {{ form.start_date }}
+            {% if form.start_date.errors %}
+                <div class="text-danger">
+                    {% for error in form.start_date.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <div class="form-text">When the event begins</div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <label for="{{ form.end_date.id_for_label }}" class="form-label">
+                {{ form.end_date.label }} <span class="text-danger">*</span>
+            </label>
+            {{ form.end_date }}
+            {% if form.end_date.errors %}
+                <div class="text-danger">
+                    {% for error in form.end_date.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <div class="form-text">When the event ends</div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <label for="{{ form.registration_deadline.id_for_label }}" class="form-label">
+                {{ form.registration_deadline.label }} <span class="text-danger">*</span>
+            </label>
+            {{ form.registration_deadline }}
+            {% if form.registration_deadline.errors %}
+                <div class="text-danger">
+                    {% for error in form.registration_deadline.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <div class="form-text">Last date for registration</div>
+        </div>
+    </div>
+</div>
 
                         <!-- Registration & Capacity Section -->
                         <div class="mb-4">
@@ -376,45 +545,50 @@ document.addEventListener('DOMContentLoaded', function() {
         toggleFeeField(); // Initial state
     }
     
-    // Form validation
     const form = document.getElementById('eventForm');
-    const submitBtn = document.getElementById('submitBtn');
-    
-    form.addEventListener('submit', function(e) {
-        const startDate = new Date(document.getElementById('{{ form.start_date.id_for_label }}').value);
-        const endDate = new Date(document.getElementById('{{ form.end_date.id_for_label }}').value);
-        const regDeadline = new Date(document.getElementById('{{ form.registration_deadline.id_for_label }}').value);
-        const now = new Date();
-        
-        let hasErrors = false;
-        let errorMessage = '';
-        
-        if (startDate >= endDate) {
-            hasErrors = true;
-            errorMessage += 'End date must be after start date.\n';
-        }
-        
-        if (regDeadline >= startDate) {
-            hasErrors = true;
-            errorMessage += 'Registration deadline must be before the event starts.\n';
-        }
-        
-        if (startDate <= now) {
-            hasErrors = true;
-            errorMessage += 'Start date must be in the future.\n';
-        }
-        
-        if (hasErrors) {
-            e.preventDefault();
-            alert(errorMessage);
-            return false;
-        }
-        
-        // Show loading state
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Saving...';
-        submitBtn.disabled = true;
+const submitBtn = document.getElementById('submitBtn');
+
+form.addEventListener('submit', function(e) {
+    e.preventDefault(); // stop default submit
+
+    const locationId = document.getElementById('{{ form.location.id_for_label }}').value;
+    const startDate = new Date(document.getElementById('{{ form.start_date.id_for_label }}').value);
+    const endDate = new Date(document.getElementById('{{ form.end_date.id_for_label }}').value);
+    const regDeadline = new Date(document.getElementById('{{ form.registration_deadline.id_for_label }}').value);
+    const now = new Date();
+
+    // Basic validation
+    let errorMessage = '';
+    if (startDate >= endDate) errorMessage += 'End date must be after start date.\n';
+    if (regDeadline >= startDate) errorMessage += 'Registration deadline must be before event starts.\n';
+    if (startDate <= now) errorMessage += 'Start date must be in the future.\n';
+
+    if (errorMessage) {
+        alert(errorMessage);
+        return;
+    }
+
+// Check overlap asynchronously
+ fetch(`/api/check_overlap/?location_id=${locationId}&start_date=${startDate.toISOString()}&end_date=${endDate.toISOString()}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.overlap) {
+                    alert("❌ The selected location is already booked for this time slot.");
+                } else {
+                    // no overlap → submit the form
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Saving...';
+                    form.submit();
+                }
+            })
+            .catch(err => {
+                console.error("Error checking overlap:", err);
+                alert("⚠️ Could not verify availability. Please try again.");
+            });
     });
-    
+});
+
+
     // Auto-fill contact email with user's email if empty
     const contactEmailField = document.getElementById('{{ form.contact_email.id_for_label }}');
     if (contactEmailField && !contactEmailField.value) {

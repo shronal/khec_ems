@@ -81,6 +81,14 @@ def home(request):
     }
     return render(request, 'events/home.html', context)
 
+
+def about_us(request):
+    """About Us page view"""
+    context = {
+        'page_title': 'About Us - KhEC Event Flow',
+    }
+    return render(request, 'events/about_us.html', context)
+
 class EventListView(ListView):
     model = Event
     template_name = 'events/event_list.html'
@@ -624,3 +632,22 @@ def event_checkin(request, slug):
     }
     
     return render(request, 'events/event_checkin.html', context)
+
+
+# views.py
+from django.http import JsonResponse
+from .models import Event, EventLocation
+from django.utils.dateparse import parse_datetime
+
+def check_overlap(request):
+    location_id = request.GET.get("location_id")
+    start = parse_datetime(request.GET.get("start_date"))
+    end = parse_datetime(request.GET.get("end_date"))
+
+    overlap = Event.objects.filter(
+        location_id=location_id,
+        start_date__lt=end,
+        end_date__gt=start
+    ).exists()
+
+    return JsonResponse({"overlap": overlap})
