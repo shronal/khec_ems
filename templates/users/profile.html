@@ -103,7 +103,7 @@
                     
                         <img src="{{ user.profile_picture.url }}" alt="{{ user.username }}" class="rounded-circle img-fluid mb-3" style="width: 150px; height: 150px; object-fit: cover;">
                     {% else %}
-                        <img src="https://via.placeholder.com/150?text={{ user.username|first|upper }}" alt="{{ user.username }}" class="rounded-circle img-fluid mb-3">
+                        <img src="/static/images/default_pp.svg" alt="{{ user.username }}" class="rounded-circle img-fluid mb-3">
                     {% endif %}
                     
                     <h5>{{ user.get_full_name|default:user.username }}</h5>

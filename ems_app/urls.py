@@ -1,5 +1,12 @@
 from django.urls import path
 from . import views
+from django.conf.urls.static import static
+from django.contrib import admin
+from django.contrib.auth import views as auth_views
+from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
+from ems_app.views import home
 
 urlpatterns = [
     path('about/', views.about_us, name='about-us'),
@@ -31,4 +38,4 @@ urlpatterns = [
     path('event/<slug:slug>/approval/', views.event_approval, name='event-approval'),
 
     path("api/check_overlap/", views.check_overlap, name="check_overlap"),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

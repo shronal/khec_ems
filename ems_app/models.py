@@ -421,3 +421,28 @@ class EventWaitlist(models.Model):
     
     def __str__(self):
         return f"{self.user.username} - {self.event.title} (Position: {self.position})"
+    
+
+
+class Userprofile(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='profile')
+    bio = models.TextField(blank=True)
+    profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
+    phone_number = models.CharField(max_length=15, blank=True)
+    organization = models.CharField(max_length=100, blank=True)
+    job_title = models.CharField(max_length=100, blank=True)
+    social_links = models.JSONField(blank=True, null=True, help_text='{"linkedin": "url", "twitter": "url"}')
+    is_verified = models.BooleanField(default=False)
+    verification_token = models.UUIDField(default=uuid.uuid4, editable=False)
+    token_created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return self.user.username
+    
+    def get_profile_url(self):
+        return reverse('user-profile', kwargs={'username': self.user.username})
+    
+    
+    
+    class Meta:
+        verbose_name_plural = "User Profiles"
