@@ -532,12 +532,12 @@ def admin_dashboard(request):
     return render(request, 'admin/dashboard.html', context)
 
 @login_required
-def event_approval(request, pk):
+def event_approval(request, slug):
     if not request.user.is_admin_user():
         messages.error(request, 'You do not have permission to access this page.')
         return redirect('home')
     
-    event = get_object_or_404(Event, pk=pk)
+    event = get_object_or_404(Event, slug=slug)
     
     if request.method == 'POST':
         status = request.POST.get('status')

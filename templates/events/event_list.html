@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Events - KhEC Event Flow{% endblock %}
+{% block title %}Events{% endblock %}
 
 {% block content %}
 <div class="container">
@@ -203,7 +203,7 @@
     
     {% if user.is_authenticated and user.is_organizer or user.is_admin_user %}
         <div class="text-center mt-4">
-            <a href="{% url 'event-create' %}" class="btn btn-success btn-lg">
+            <a href="{% url 'event-create' %}" class="btn btn-primary w-10">
                 <i class="fas fa-plus-circle me-2"></i> Create New Event
             </a>
         </div>
