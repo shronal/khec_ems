@@ -10,6 +10,7 @@ from ems_app.views import home
 
 urlpatterns = [
     path('about/', views.about_us, name='about-us'),
+    path('contact/', views.contact, name='contact-us'),
     # Event listing and details
     path('events/', views.EventListView.as_view(), name='event-list'),
     path('event/<slug:slug>/', views.EventDetailView.as_view(), name='event-detail'),

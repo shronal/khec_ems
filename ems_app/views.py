@@ -89,6 +89,40 @@ def about_us(request):
     }
     return render(request, 'events/about_us.html', context)
 
+def contact(request):
+    """Contact page view"""
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        subject = request.POST.get('subject')
+        message = request.POST.get('message')
+        contact_type = request.POST.get('contact_type')
+        
+        # Validate form data
+        if not all([name, email, subject, message, contact_type]):
+            messages.error(request, 'Please fill in all required fields.')
+            return redirect('contact')
+        
+        # Send email (implement as needed)
+        try:
+            send_mail(
+                f'New Contact Form Submission: {subject}',
+                f'From: {name} ({email})\n\nType: {contact_type}\n\nMessage:\n{message}',
+                settings.DEFAULT_FROM_EMAIL,
+                [settings.DEFAULT_FROM_EMAIL],
+                fail_silently=False,
+            )
+            messages.success(request, 'Thank you for contacting us! We will get back to you soon.')
+            return redirect('contact')
+        except Exception as e:
+            messages.error(request, f'Error sending message. Please try again later.')
+            return redirect('contact')
+    
+    context = {
+        'page_title': 'Contact Us - KhEC Event Flow',
+    }
+    return render(request, 'events/contact.html', context)
+
 class EventListView(ListView):
     model = Event
     template_name = 'events/event_list.html'
