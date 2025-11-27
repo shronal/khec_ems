@@ -1,0 +1,260 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}About Us{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+    }
+
+    /* Hero Section */
+    .about-hero {
+        background: #fdfdfd;
+        padding: 80px 0;
+        margin-bottom: 60px;
+        text-align: center;
+    }
+
+    .about-hero h1 {
+        font-size: 3.5rem;
+        font-weight: 700;
+        color: #44286b;
+        margin-bottom: 20px;
+        animation: fadeInDown 1s ease;
+    }
+
+    .about-hero p {
+        font-size: 1.2rem;
+        opacity: 0.9;
+        max-width: 650px;
+        margin: 0 auto;
+        animation: fadeInUp 1.2s ease;
+    }
+
+    /* Split Sections */
+    .section-split {
+        padding: 80px 0;
+        opacity: 0;
+        transform: translateY(50px);
+        transition: all 1s ease;
+    }
+
+    .section-split.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .section-split img {
+        max-width: 100%;
+        border-radius: 15px;
+        transition: transform 0.6s ease;
+    }
+
+    .section-split img:hover {
+        transform: scale(1.05);
+    }
+
+    /* Stats */
+    .stats-section {
+        background: #f8f9fa;
+        padding: 80px 0;
+        margin: 80px 0;
+        text-align: center;
+    }
+
+    .stat-number {
+        font-size: 3rem;
+        font-weight: 700;
+        color: #44286b;
+        display: block;
+    }
+
+    /* Timeline */
+    .timeline {
+        padding: 60px 0;
+    }
+
+    .timeline-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 50px;
+        opacity: 0;
+        transform: translateX(-50px);
+        transition: all 1s ease;
+    }
+
+    .timeline-item:nth-child(even) {
+        flex-direction: row-reverse;
+        transform: translateX(50px);
+    }
+
+    .timeline-item.show {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    .timeline-content {
+        flex: 1;
+        padding: 20px;
+    }
+
+    .timeline img {
+        width: 300px;
+        border-radius: 15px;
+        margin: 0 20px;
+        transition: transform 0.6s ease;
+    }
+
+    .timeline img:hover {
+        transform: scale(1.08);
+    }
+
+    /* CTA */
+    .cta-section {
+        text-align: center;
+        padding: 60px 0;
+        animation: fadeInUp 1s ease;
+    }
+
+    .cta-btn {
+        padding: 12px 30px;
+        border-radius: 30px;
+        font-size: 1.2rem;
+        background-color: #44286b;
+        border: none;
+    }
+
+    .cta-btn:hover {
+        background-color: #2e1a4a;
+    }
+
+    /* Animations */
+    @keyframes fadeInDown {
+        from { opacity: 0; transform: translateY(-40px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(40px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero -->
+<div class="about-hero">
+    <h1 style="color: #44286b; font-weight: bold; font-family: 'Arial Black', sans-serif;" >kvents</h1>
+    <p>Empowering Khwopa Engineering College with seamless event management and community engagement</p>
+</div>
+
+<div class="container">
+    <!-- Split Intro -->
+    <div class="row section-split align-items-center">
+        <div class="col-md-6">
+            <h2 style="color: #44286b; font-weight: bold; sans-serif;" >Connecting Our Engineering Community</h2>
+            <p class="lead"> 
+  <span style="color: #44286b; font-weight: bold; font-family: 'Arial Black', sans-serif;">kvents</span>
+ is the premier event management platform designed specifically for Khwopa Engineering College. We bridge the gap between event organizers and participants, making it easier than ever to discover, register for, and manage events within our vibrant academic community.
+</p>
+
+        </div>
+        <div class="col-md-6 text-center">
+            <img src="{% static 'images/events.svg' %}" alt="Events">
+        </div>
+    </div>
+
+    <!-- Mission & Vision -->
+    <div class="row section-split align-items-center">
+        <div class="col-md-6 text-center">
+            <img src="{% static 'images/misson.svg' %}" alt="Mission">
+        </div>
+        <div class="col-md-6">
+            <h3 style="color: #44286b; font-weight: bold;  font-family: 'Poppins', sans-serif;">Our Mission</h3>
+            <p>To provide a comprehensive platform that enhances the event experience at KhEC, promoting active participation, knowledge sharing, and community building among students, faculty, and staff.</p>
+            <h3 class="mt-4" style="color: #44286b; font-weight: bold; font-family: 'Poppins', sans-serif;" >Our Vision</h3>
+            <p>To become the central hub for all academic and extracurricular activities at KhEC, fostering a vibrant campus culture and strengthening our engineering community.</p>
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-section">
+        <div class="row">
+            <div class="col-md-3"><span class="stat-number" data-count="55">0</span><div>Events Organized</div></div>
+            <div class="col-md-3"><span class="stat-number" data-count="105">0</span><div>Active Users</div></div>
+            <div class="col-md-3"><span class="stat-number" data-count="5">0</span><div>Departments</div></div>
+            <div class="col-md-3"><span class="stat-number" data-count="98">0</span><div>User Satisfaction (%)</div></div>
+        </div>
+    </div>
+
+    <!-- Timeline -->
+    <div class="timeline">
+        <div class="timeline-item">
+            <div class="timeline-content">
+                <h5>2024</h5>
+                <p>Conceptualized the idea of a digital event management system at KhEC.</p>
+            </div>
+            <img src="{% static 'images/concept.svg' %}" alt="Concept">
+        </div>
+        <div class="timeline-item">
+            <div class="timeline-content">
+                <h5>2025</h5>
+                <p>Launched the first version with event registration and QR check-ins.</p>
+            </div>
+            <img src="{% static 'images/launch.svg' %}" alt="Launch">
+        </div>
+        {% comment %} <div class="timeline-item">
+            <div class="timeline-content">
+                <h5>2025</h5>
+                <p>Expanded to full analytics, smart notifications, and 100+ users.</p>
+            </div>
+            <img src="{% static 'images/timeline3.jpg' %}" alt="Growth">
+        </div>
+    </div> {% endcomment %}
+
+    <!-- CTA -->
+    <div class="cta-section">
+        <h2>Be Part of Our Journey</h2>
+        <p class="mb-4">Join kvents and stay connected with every event at Khwopa Engineering College.</p>
+        <a href="{% url 'home' %}" class="btn btn-primary cta-btn">Explore Events</a>
+    </div>
+</div>
+
+<!-- Scroll & Counter Animations -->
+<script>
+    // Counter animation
+    document.addEventListener("DOMContentLoaded", function() {
+        const counters = document.querySelectorAll('.stat-number');
+        counters.forEach(counter => {
+            const updateCount = () => {
+                const target = +counter.getAttribute('data-count');
+                const count = +counter.innerText;
+                const increment = target / 200;
+
+                if (count < target) {
+                    counter.innerText = Math.ceil(count + increment);
+                    setTimeout(updateCount, 20);
+                } else {
+                    counter.innerText = target;
+                }
+            };
+            updateCount();
+        });
+    });
+
+    // Scroll animations
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('show');
+            }
+        });
+    }, { threshold: 0.2 });
+
+    document.querySelectorAll('.section-split, .timeline-item').forEach(el => {
+        observer.observe(el);
+    });
+</script>
+{% endblock %}
