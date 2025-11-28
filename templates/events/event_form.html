@@ -2,7 +2,7 @@
 {% load crispy_forms_tags %}
 
 {% block title %}
-    {% if form.instance.pk %}Edit Event{% else %}Create Event{% endif %} - KhEC Event Flow
+    {% if form.instance.pk %}Edit Event{% else %}Create Event{% endif %} - kvents
 {% endblock %}
 {% block extra_css %}
     <!-- Add your custom theme CSS here -->
@@ -137,6 +137,7 @@ h5.text-muted {
 {% endblock %}
 
 {% block content %}
+<br>
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-lg-10">
@@ -441,36 +442,6 @@ h5.text-muted {
                                 </div>
                             </div>
                         </div>
-
-                        <!-- SEO Section (Optional) -->
-                        <div class="mb-4">
-                            <h5 class="text-muted mb-3">
-                                <i class="fas fa-search me-2"></i>SEO (Optional)
-                            </h5>
-                            
-                            <div class="row">
-                                <div class="col-md-12 mb-3">
-                                    <label for="{{ form.meta_description.id_for_label }}" class="form-label">{{ form.meta_description.label }}</label>
-                                    {{ form.meta_description }}
-                                    {% if form.meta_description.errors %}
-                                        <div class="text-danger">{{ form.meta_description.errors }}</div>
-                                    {% endif %}
-                                    <div class="form-text">Meta description for search engines (max 160 characters) <span id="meta-desc-counter"></span></div>
-                                </div>
-                            </div>
-                            
-                            <div class="row">
-                                <div class="col-md-12 mb-3">
-                                    <label for="{{ form.meta_keywords.id_for_label }}" class="form-label">{{ form.meta_keywords.label }}</label>
-                                    {{ form.meta_keywords }}
-                                    {% if form.meta_keywords.errors %}
-                                        <div class="text-danger">{{ form.meta_keywords.errors }}</div>
-                                    {% endif %}
-                                    <div class="form-text">Keywords separated by commas (e.g., workshop, technology, programming)</div>
-                                </div>
-                            </div>
-                        </div>
-                        
                         <!-- Form Actions -->
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                             <a href="{% url 'event-list' %}" class="btn btn-outline-secondary me-md-2">Cancel</a>

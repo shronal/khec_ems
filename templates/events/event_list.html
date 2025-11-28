@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Events - KhEC Event Flow{% endblock %}
+{% block title %}Events{% endblock %}
 
 {% block content %}
 <div class="container">
@@ -101,7 +101,7 @@
                         {% if event.featured_image %}
                             <img src="{{ event.featured_image.url }}" class="card-img-top" alt="{{ event.title }}" style="height: 200px; object-fit: cover;">
                         {% else %}
-                            <img src="https://via.placeholder.com/300x200?text=Event" class="card-img-top" alt="{{ event.title }}">
+                            <img src="/static/images/default_event_image.png" class="card-img-top" alt="{{ event.title }}" style="height: 200px; object-fit: cover;">
                         {% endif %}
                         <div class="card-body">
                             <h5 class="card-title">{{ event.title }}</h5>
@@ -203,7 +203,7 @@
     
     {% if user.is_authenticated and user.is_organizer or user.is_admin_user %}
         <div class="text-center mt-4">
-            <a href="{% url 'event-create' %}" class="btn btn-success btn-lg">
+            <a href="{% url 'event-create' %}" class="btn btn-primary w-10">
                 <i class="fas fa-plus-circle me-2"></i> Create New Event
             </a>
         </div>

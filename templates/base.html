@@ -229,7 +229,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'about-us' %}">
+                        <a class="nav-link" href="{% url 'contact-us' %}">
                             Contact Us
                         </a>
                     </li>
@@ -259,8 +259,8 @@
                 <ul class="navbar-nav">
                     {% if user.is_authenticated %}
                         <li class="nav-item dropdown user-dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fas fa-user-circle me-1"></i>
+                            <a  id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <img src="/static/images/nav.svg" alt="{{ user.username }}" style="height: 30px; width: 30px;">
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                 <li>
@@ -328,14 +328,14 @@
                 </div>
             {% endfor %}
         {% endif %}
-
+        
         {% block content %}{% endblock %}
     </div>
 <footer class="footer mt-auto py-4" style="background-color: #261044ff; border-top: 1px solid rgba(255, 255, 255, 0.2);">
   <div class="container">
     <div class="row">
       <div class="col-md-6 mb-3">
-        <h5 style="color: #ffffff;">KhEC Event Flow</h5>
+        <h5 style="color: #ffffff;">Kvents</h5>
         <p style="color: #ddd;">Your one-step solution for event management at Khwopa Engineering College.</p>
       </div>
       <div class="col-md-3 mb-3">

@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}KhEC Event Flow - Home{% endblock %}
+{% block title %}Home{% endblock %}
 {% load static%}
 {% block extra_css %}
 <style>
@@ -15,7 +15,7 @@
   background-image: url("/static/images/misson.svg");
   background-size: cover;
   background-position: center;
-  display: flex;
+  display: block;
   align-items: center;
   justify-content: center;
   position: relative;
@@ -50,7 +50,7 @@
 {% endblock%}
 {% block content %}
 
-<div class="welcome" style="background-image: url('{% static 'images/download.jpeg' %}');">
+<div class="welcome" style="background-image: url('{% static 'images/home_bg.png' %}');">
   <div class="welcome-overlay">
     <h1>Welcome to Khwopa Event Management System</h1>
     <p>Seamlessly manage and organize events with ease.</p>
@@ -98,7 +98,7 @@
                             {% if event.featured_image %}
                             <img src="{{ event.featured_image.url }}" class="card-img-top" alt="{{ event.title }}" style="height: 200px; object-fit: cover;">
                         {% else %}
-                            <img src="https://via.placeholder.com/300x200?text=Event" class="card-img-top" alt="{{ event.title }}">
+                            <img src="/static/images/default_event_image.png" class="card-img-top" alt="{{ event.title }}" style="height: 200px; object-fit: cover;">
                         {% endif %}
                             <div class="card-body">
                                 <h5 class="card-title">{{ event.title }}</h5>
@@ -126,7 +126,7 @@
 
     <!-- Features Section -->
     <div class="row my-5 text-center">
-        <h2 class="mb-4">Why Use KhEC Event Flow?</h2>
+        <h2 class="mb-4">Why Use kvents?</h2>
         
         <div class="col-md-4 mb-4">
             <div class="card h-100 p-3">
@@ -141,7 +141,7 @@
         <div class="col-md-4 mb-4">
             <div class="card h-100 p-3">
                 <div class="card-body">
-                    <i style="color: #4b2e83;" class="fas fa-user-plus fa-3x mb-3 text-primary "></i>
+                    <i style="color: #4b2e83;" class="fas fa-user-plus fa-3x mb-3 text-primary " ></i>
                     <h4>Easy Registration</h4>
                     <p>Register for events with just one click. Get reminders and updates about your registered events.</p>
                 </div>
