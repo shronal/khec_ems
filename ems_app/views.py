@@ -250,11 +250,14 @@ class EventDetailView(DetailView):
         is_waitlisted = False
         
         if user.is_authenticated:
-            try:
-                registration = EventRegistration.objects.get(event=event, participant=user)
-                is_registered = True
-            except EventRegistration.DoesNotExist:
-                pass
+            registration = EventRegistration.objects.filter(
+            event=event,
+            participant=user,
+            status='confirmed'
+        ).first()
+
+            is_registered = registration is not None
+
             
             # Check waitlist
             try:
@@ -334,34 +337,55 @@ def user_registrations(request):
 @login_required
 def register_for_event(request, slug):
     event = get_object_or_404(Event, slug=slug)
-    
+
     # Check if registration is allowed
     if not event.is_registration_open():
         messages.error(request, 'Registration for this event is closed.')
         return redirect('event-detail', slug=event.slug)
-    
-    # Check if user is already registered
-    if EventRegistration.objects.filter(event=event, participant=request.user).exists():
+
+    # Check if user already has a CONFIRMED registration
+    if EventRegistration.objects.filter(
+        event=event,
+        participant=request.user,
+        status='confirmed'
+    ).exists():
         messages.warning(request, 'You are already registered for this event.')
         return redirect('event-detail', slug=event.slug)
-    
+
     if request.method == 'POST':
         form = EventRegistrationForm(request.POST)
         if form.is_valid():
-            # Check if there are spots left
-            if event.has_spots_left() or event.max_participants == 0:
+
+            # Check if previously cancelled registration exists → reuse it
+            existing_cancelled = EventRegistration.objects.filter(
+                event=event,
+                participant=request.user,
+                status='cancelled'
+            ).first()
+
+            if existing_cancelled:
+                registration = existing_cancelled
+                # Update fields from form
+                registration.notes = form.cleaned_data.get("notes")
+                registration.emergency_contact = form.cleaned_data.get("emergency_contact")
+                registration.dietary_requirements = form.cleaned_data.get("dietary_requirements")
+            else:
+                # Create new registration
                 registration = form.save(commit=False)
                 registration.event = event
                 registration.participant = request.user
+
+            # Confirm registration
+            if event.has_spots_left() or event.max_participants == 0:
                 registration.status = 'confirmed'
                 registration.save()
-                
+
                 # Update analytics
                 analytics, created = EventAnalytics.objects.get_or_create(event=event)
                 analytics.update_analytics()
-                
+
                 messages.success(
-                    request, 
+                    request,
                     f'You have successfully registered for {event.title}!'
                 )
             else:
@@ -376,11 +400,12 @@ def register_for_event(request, slug):
                     request,
                     f'Event is full. You have been added to the waitlist at position {position}.'
                 )
-            
+
             return redirect('event-detail', slug=event.slug)
+
     else:
         form = EventRegistrationForm()
-    
+
     return render(request, 'events/event_register.html', {
         'event': event,
         'form': form
