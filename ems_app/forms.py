@@ -33,12 +33,18 @@ class EventForm(forms.ModelForm):
             'meta_description': forms.Textarea(attrs={'rows': 2, 'class': 'form-control'}),
             'meta_keywords': forms.TextInput(attrs={'class': 'form-control'}),
         }
-    
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        # Set active categories in dropdown
+        self.fields['category'].queryset = EventCategory.objects.filter(is_active=True)
+
         for field_name, field in self.fields.items():
             if field_name not in ['featured_image', 'banner_image', 'is_free', 'is_featured']:
                 field.widget.attrs['class'] = 'form-control'
+
+
     
     def clean(self):
         cleaned_data = super().clean()

@@ -1,7 +1,98 @@
 {% extends 'base.html' %}
+<<<<<<< HEAD
+=======
+
+>>>>>>> f501a1d23f527b40aedb698721a7305eeb926352
 {% block title %}Profile - KhEC Event Flow{% endblock %}
+{% block extra_css %}
+<style>
+  /* Body + Layout */
+  body {
+    background-color: #f4f6fb;
+    font-family: 'Segoe UI', sans-serif;
+  }
+
+  /* Card Styling */
+  .card {
+    border-radius: 16px;
+    border: none;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    margin-bottom: 30px;
+  }
+
+  .card-header {
+    background-color: #fff;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #4b2e83;
+    border-bottom: 1px solid #eee;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    padding: 1rem 1.5rem;
+  }
+
+  /* Profile Image */
+  .card-body img.rounded-circle {
+    border: 4px solid #ddd;
+  }
+
+  /* Labels & Inputs */
+  .form-label {
+    font-weight: 600;
+  }
+
+  .form-control {
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    padding: 10px 12px;
+    transition: border 0.3s ease;
+  }
+
+  .form-control:focus {
+    border-color: #4b2e83;
+    box-shadow: 0 0 0 2px rgba(75, 46, 131, 0.1);
+  }
+
+  /* Buttons */
+  .btn-primary {
+    background-color: #4b2e83;
+    border-color: #4b2e83;
+    border-radius: 8px;
+    font-weight: 600;
+  }
+
+  .btn-primary:hover {
+    background-color: #3a2168;
+    border-color: #3a2168;
+  }
+
+  .btn-outline-primary,
+  .btn-outline-success,
+  .btn-outline-secondary {
+    border-radius: 8px;
+    font-weight: 500;
+  }
+
+  /* Icons and Text */
+  .text-muted {
+    color: #6c757d !important;
+  }
+
+  h4 {
+    color: #4b2e83;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .card-header {
+      font-size: 1rem;
+    }
+  }
+</style>
+{% endblock %}
 
 {% block content %}
+<<<<<<< HEAD
 <div class="container" style="max-width: 1000px; margin: auto; padding: 20px;">
     <div style="display: flex; flex-wrap: wrap; gap: 20px;">
         <!-- Profile Summary Section -->
@@ -11,6 +102,21 @@
                 <div style="text-align: center;">
                     {% if user.profile_picture %}
                         <img src="{{ user.profile_picture.url }}" alt="{{ user.username }}" style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%; margin-bottom: 10px;">
+=======
+<div class="container">
+    <div class="row">
+        <!-- Left Column -->
+        <div class="col-md-4 mb-4">
+            <!-- Profile Info -->
+            <div class="card">
+                <div class="card-header">
+                    <h4>Profile Information</h4>
+                </div>
+                <div class="card-body text-center">
+                    {% if user.profile_picture %}
+                    
+                        <img src="{{ user.profile_picture.url }}" alt="{{ user.username }}" class="rounded-circle img-fluid mb-3" style="width: 150px; height: 150px; object-fit: cover;">
+>>>>>>> f501a1d23f527b40aedb698721a7305eeb926352
                     {% else %}
                         <img src="https://via.placeholder.com/150?text={{ user.username|first|upper }}" alt="{{ user.username }}" style="width: 150px; height: 150px; border-radius: 50%; margin-bottom: 10px;">
                     {% endif %}
@@ -26,6 +132,7 @@
                 </div>
             </div>
 
+<<<<<<< HEAD
             <div style="border: 1px solid #ddd; padding: 20px; margin-top: 20px; border-radius: 5px;">
                 <h4>Account Statistics</h4>
                 <div style="display: flex; justify-content: space-around; margin-top: 10px;">
@@ -36,11 +143,29 @@
                     <div style="text-align: center;">
                         <strong>{{ user.organized_events.count }}</strong>
                         <p style="color: #777;">Organized Events</p>
+=======
+            <!-- Account Stats -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h4>Account Statistics</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-6 mb-3">
+                            <h5>{{ user.event_registrations.count }}</h5>
+                            <p class="text-muted">Registrations</p>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <h5>{{ user.organized_events.count }}</h5>
+                            <p class="text-muted">Organized Events</p>
+                        </div>
+>>>>>>> f501a1d23f527b40aedb698721a7305eeb926352
                     </div>
                 </div>
             </div>
         </div>
 
+<<<<<<< HEAD
         <!-- Edit Profile Form Section -->
         <div style="flex: 2; min-width: 300px;">
             <div style="border: 1px solid #ddd; padding: 20px; border-radius: 5px;">
@@ -93,6 +218,77 @@
                 </form>
             </div>
 
+=======
+        <!-- Right Column -->
+        <div class="col-md-8">
+            <!-- Edit Profile -->
+            <div class="card">
+                <div class="card-header">
+                    <h4>Edit Profile</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="id_first_name" class="form-label">First Name</label>
+                                {{ form.first_name }}
+                                {% if form.first_name.errors %}
+                                    <div class="text-danger">{{ form.first_name.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="id_last_name" class="form-label">Last Name</label>
+                                {{ form.last_name }}
+                                {% if form.last_name.errors %}
+                                    <div class="text-danger">{{ form.last_name.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="id_email" class="form-label">Email</label>
+                                {{ form.email }}
+                                {% if form.email.errors %}
+                                    <div class="text-danger">{{ form.email.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="id_phone_number" class="form-label">Phone Number</label>
+                                {{ form.phone_number }}
+                                {% if form.phone_number.errors %}
+                                    <div class="text-danger">{{ form.phone_number.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="id_profile_picture" class="form-label">Profile Picture</label>
+                            {{ form.profile_picture }}
+                            {% if form.profile_picture.errors %}
+                                <div class="text-danger">{{ form.profile_picture.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="id_bio" class="form-label">Bio</label>
+                            {{ form.bio }}
+                            {% if form.bio.errors %}
+                                <div class="text-danger">{{ form.bio.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Update Profile</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Organizer Tools -->
+>>>>>>> f501a1d23f527b40aedb698721a7305eeb926352
             {% if user.is_organizer %}
                 <div style="border: 1px solid #ddd; padding: 20px; margin-top: 20px; border-radius: 5px;">
                     <h4>Organizer Tools</h4>
@@ -101,6 +297,10 @@
                 </div>
             {% endif %}
 
+<<<<<<< HEAD
+=======
+            <!-- Admin Tools -->
+>>>>>>> f501a1d23f527b40aedb698721a7305eeb926352
             {% if user.is_admin_user %}
                 <div style="border: 1px solid #ddd; padding: 20px; margin-top: 20px; border-radius: 5px;">
                     <h4>Admin Tools</h4>

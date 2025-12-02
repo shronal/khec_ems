@@ -2,15 +2,27 @@
 
 {% block title %}KhEC Event Flow - Home{% endblock %}
 
+<style>
+    .circle-img {
+  width: 300;     /* Adjust size as needed */
+  height: 280px;    /* Make sure height = width */
+  object-fit: cover; /* Keeps aspect ratio inside the circle */
+  border-radius: 50%; /* Makes it a circle */
+  margin-left: 100px;
+}
+</style>
 {% block content %}
 {% load static%}
 <div class="container">
     <!-- Hero Section -->
     <div class="row align-items-center py-5">
         <div class="col-lg-6">
-            <h1 class="display-4 fw-bold">KhEC Event Flow</h1>
+            <h1 style="color: #2b2069ff; font-family: Helvetica; font-weight: 500;">
+  Create any event easily. <br>Control every detail.
+</h1>
+
             <p class="lead">Discover, participate, and organize events at Khwopa Engineering College.</p>
-            <p class="mb-4">Join our platform to stay updated with all the exciting events happening at KhEC. Whether you're looking to attend or organize events, we've got you covered!</p>
+
             <div class="d-grid gap-2 d-md-flex justify-content-md-start">
                 <a href="{% url 'event-list' %}" class="btn btn-primary btn-lg px-4 me-md-2">Browse Events</a>
                 {% if user.is_authenticated and user.is_organizer %}
@@ -20,9 +32,12 @@
                 {% endif %}
             </div>
         </div>
-        <div class="col-lg-6">
-            <img src="{% static 'images/logo.png' %}" alt="KhEC Event Flow" class="img-fluid rounded shadow">
-        </div>
+       <div class="col-lg-6" style="display: flex; justify-content: center;">
+  <img src="{% static 'images/ho.svg' %}" 
+       alt="KhEC Event Flow"
+       style="width: 400px; height: 400px; object-fit: cover; border-radius: 50%; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
+</div>
+
     </div>
 
     <!-- Upcoming Events Section -->
@@ -37,11 +52,11 @@
                 {% for event in upcoming_events %}
                     <div class="col">
                         <div class="card h-100 event-card">
-                            {% if event.image %}
-                                <img src="{{ event.image.url }}" class="card-img-top" alt="{{ event.title }}" style="height: 200px; object-fit: cover;">
-                            {% else %}
-                                <img src="https://via.placeholder.com/300x200?text=Event" class="card-img-top" alt="{{ event.title }}">
-                            {% endif %}
+                            {% if event.featured_image %}
+                            <img src="{{ event.featured_image.url }}" class="card-img-top" alt="{{ event.title }}" style="height: 200px; object-fit: cover;">
+                        {% else %}
+                            <img src="https://via.placeholder.com/300x200?text=Event" class="card-img-top" alt="{{ event.title }}">
+                        {% endif %}
                             <div class="card-body">
                                 <h5 class="card-title">{{ event.title }}</h5>
                                 <p class="card-text text-muted">
@@ -52,7 +67,7 @@
                                 <p class="card-text">{{ event.description|truncatewords:20 }}</p>
                             </div>
                             <div class="card-footer bg-transparent">
-                                <a href="{% url 'event-detail' event.pk %}" class="btn btn-sm btn-primary">View Details</a>
+                                <a href="{% url 'event-detail' event.slug %}" class="btn btn-sm btn-primary">View Details</a>
                                 <span class="badge badge-category float-end">{{ event.category.name }}</span>
                             </div>
                         </div>
@@ -73,7 +88,7 @@
         <div class="col-md-4 mb-4">
             <div class="card h-100 p-3">
                 <div class="card-body">
-                    <i class="fas fa-calendar-check fa-3x mb-3 text-primary"></i>
+                    <i class="fas fa-calendar-check fa-3x mb-3 text-primary" style="color: #4b2e83;"></i>
                     <h4>Discover Events</h4>
                     <p>Find all the events happening at KhEC in one place. Filter by category, date, and more.</p>
                 </div>
@@ -83,7 +98,7 @@
         <div class="col-md-4 mb-4">
             <div class="card h-100 p-3">
                 <div class="card-body">
-                    <i class="fas fa-user-plus fa-3x mb-3 text-primary"></i>
+                    <i style="color: #4b2e83;" class="fas fa-user-plus fa-3x mb-3 text-primary "></i>
                     <h4>Easy Registration</h4>
                     <p>Register for events with just one click. Get reminders and updates about your registered events.</p>
                 </div>
@@ -93,7 +108,7 @@
         <div class="col-md-4 mb-4">
             <div class="card h-100 p-3">
                 <div class="card-body">
-                    <i class="fas fa-tasks fa-3x mb-3 text-primary"></i>
+                    <i style="color: #4b2e83;" class="fas fa-tasks fa-3x mb-3 text-primary"></i>
                     <h4>Organize Events</h4>
                     <p>Create and manage your own events. Track registrations and get feedback from participants.</p>
                 </div>

@@ -2,8 +2,9 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    path('about/', views.about_us, name='about-us'),
     # Event listing and details
-    path('', views.EventListView.as_view(), name='event-list'),
+    path('events/', views.EventListView.as_view(), name='event-list'),
     path('event/<slug:slug>/', views.EventDetailView.as_view(), name='event-detail'),
     
     # Event management
@@ -28,4 +29,6 @@ urlpatterns = [
     
     # Admin functions
     path('admin/event/<int:pk>/approval/', views.event_approval, name='event-approval'),
+
+    path("api/check_overlap/", views.check_overlap, name="check_overlap"),
 ]
