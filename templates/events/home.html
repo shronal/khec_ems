@@ -1,8 +1,49 @@
 {% extends 'base.html' %}
 
+<<<<<<< HEAD
 {% block title %}KhEC Event Flow - Home{% endblock %}
 
+=======
+{% block title %}Home{% endblock %}
+{% load static%}
+{% block extra_css %}
+>>>>>>> 203324394a9628de1d6948cc439508ff6a502389
 <style>
+
+    html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+.welcome {
+  background-image: url("/static/images/misson.svg");
+  background-size: cover;
+  background-position: center;
+  display: block;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  color: white;
+  text-align: center;
+}
+
+.welcome-overlay {
+  background-color: rgba(0, 0, 0, 0.4); /* Semi-transparent overlay */
+  padding: 40px;
+  border-radius: 8px;
+
+}
+
+.welcome-overlay h1 {
+  font-size: 3rem;
+  margin-bottom: 20px;
+}
+
+.welcome-overlay p {
+  font-size: 1.5rem;
+}
+
     .circle-img {
   width: 300;     /* Adjust size as needed */
   height: 280px;    /* Make sure height = width */
@@ -12,7 +53,14 @@
 }
 </style>
 {% block content %}
-{% load static%}
+
+<div class="welcome" style="background-image: url('{% static 'images/home_bg.png' %}');">
+  <div class="welcome-overlay">
+    <h1>Welcome to Khwopa Event Management System</h1>
+    <p>Seamlessly manage and organize events with ease.</p>
+  </div>
+</div>
+
 <div class="container">
     <!-- Hero Section -->
     <div class="row align-items-center py-5">
@@ -20,7 +68,6 @@
             <h1 style="color: #2b2069ff; font-family: Helvetica; font-weight: 500;">
   Create any event easily. <br>Control every detail.
 </h1>
-
             <p class="lead">Discover, participate, and organize events at Khwopa Engineering College.</p>
 
             <div class="d-grid gap-2 d-md-flex justify-content-md-start">
@@ -55,7 +102,7 @@
                             {% if event.featured_image %}
                             <img src="{{ event.featured_image.url }}" class="card-img-top" alt="{{ event.title }}" style="height: 200px; object-fit: cover;">
                         {% else %}
-                            <img src="https://via.placeholder.com/300x200?text=Event" class="card-img-top" alt="{{ event.title }}">
+                            <img src="/static/images/default_event_image.png" class="card-img-top" alt="{{ event.title }}" style="height: 200px; object-fit: cover;">
                         {% endif %}
                             <div class="card-body">
                                 <h5 class="card-title">{{ event.title }}</h5>
@@ -83,7 +130,7 @@
 
     <!-- Features Section -->
     <div class="row my-5 text-center">
-        <h2 class="mb-4">Why Use KhEC Event Flow?</h2>
+        <h2 class="mb-4">Why Use kvents?</h2>
         
         <div class="col-md-4 mb-4">
             <div class="card h-100 p-3">
@@ -98,7 +145,7 @@
         <div class="col-md-4 mb-4">
             <div class="card h-100 p-3">
                 <div class="card-body">
-                    <i style="color: #4b2e83;" class="fas fa-user-plus fa-3x mb-3 text-primary "></i>
+                    <i style="color: #4b2e83;" class="fas fa-user-plus fa-3x mb-3 text-primary " ></i>
                     <h4>Easy Registration</h4>
                     <p>Register for events with just one click. Get reminders and updates about your registered events.</p>
                 </div>

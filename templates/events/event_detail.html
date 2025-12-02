@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
 
-{% block title %}{{ event.title }} - KhEC Event Flow{% endblock %}
+{% block title %}{{ event.title }} - kvents{% endblock %}
 
 {% block content %}
 <div class="container">
@@ -12,7 +12,7 @@
                {% if event.featured_image %}
                             <img src="{{ event.featured_image.url }}" class="card-img-top" alt="{{ event.title }}" style="height: 200px; object-fit: cover;">
                         {% else %}
-                            <img src="https://via.placeholder.com/300x200?text=Event" class="card-img-top" alt="{{ event.title }}">
+                            <img src="/static/images/default_event_image.png" class="card-img-top" alt="{{ event.title }}" style="height: 300px; object-fit: cover;">
                         {% endif %}
                 <div class="card-body">
                     <h1 class="card-title">{{ event.title }}</h1>

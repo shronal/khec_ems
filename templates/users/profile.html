@@ -118,7 +118,11 @@
                         <img src="{{ user.profile_picture.url }}" alt="{{ user.username }}" class="rounded-circle img-fluid mb-3" style="width: 150px; height: 150px; object-fit: cover;">
 >>>>>>> f501a1d23f527b40aedb698721a7305eeb926352
                     {% else %}
+<<<<<<< HEAD
                         <img src="https://via.placeholder.com/150?text={{ user.username|first|upper }}" alt="{{ user.username }}" style="width: 150px; height: 150px; border-radius: 50%; margin-bottom: 10px;">
+=======
+                        <img src="/static/images/default_pp.svg" alt="{{ user.username }}" class="rounded-circle img-fluid mb-3">
+>>>>>>> 203324394a9628de1d6948cc439508ff6a502389
                     {% endif %}
 
                     <h5>{{ user.get_full_name|default:user.username }}</h5>

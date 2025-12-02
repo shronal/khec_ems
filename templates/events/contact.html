@@ -1,0 +1,665 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Contact Us - KhEC Event Flow{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+    }
+
+    /* Hero Section */
+    .contact-hero {
+        background: linear-gradient(135deg, #44286b 0%, #764ba2 100%);
+        padding: 100px 0;
+        margin-bottom: 60px;
+        text-align: center;
+        color: white;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .contact-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="white" stroke-width="0.5" opacity="0.1"/></svg>');
+        opacity: 0.1;
+    }
+
+    .contact-hero-content {
+        position: relative;
+        z-index: 1;
+    }
+
+    .contact-hero h1 {
+        font-size: 3.5rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        animation: fadeInDown 1s ease;
+    }
+
+    .contact-hero p {
+        font-size: 1.2rem;
+        opacity: 0.95;
+        max-width: 650px;
+        margin: 0 auto;
+        animation: fadeInUp 1.2s ease;
+    }
+
+    /* Split Sections */
+    .section-split {
+        padding: 80px 0;
+        opacity: 0;
+        transform: translateY(50px);
+        transition: all 1s ease;
+    }
+
+    .section-split.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .section-split img {
+        max-width: 100%;
+        border-radius: 15px;
+        transition: transform 0.6s ease;
+    }
+
+    .section-split img:hover {
+        transform: scale(1.05);
+    }
+
+    /* Contact Info Cards */
+    .contact-info-card {
+        background: white;
+        padding: 40px 30px;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        text-align: center;
+        margin: 20px 0;
+        transition: all 0.3s ease;
+    }
+
+    .contact-info-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+    }
+
+    .contact-info-icon {
+        width: 70px;
+        height: 70px;
+        margin: 0 auto 20px;
+        background: linear-gradient(135deg, #44286b 0%, #764ba2 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+        color: white;
+    }
+
+    .contact-info-card h5 {
+        color: #44286b;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    .contact-info-card p {
+        color: #666;
+        margin: 0;
+    }
+
+    .contact-info-card a {
+        color: #44286b;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .contact-info-card a:hover {
+        color: #764ba2;
+    }
+
+    /* Contact Form */
+    .contact-form-section {
+        background: #f8f9fa;
+        padding: 80px 0;
+        margin: 60px 0;
+    }
+
+    .form-container {
+        background: white;
+        padding: 50px;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        opacity: 0;
+        transform: translateY(50px);
+        transition: all 1s ease;
+    }
+
+    .form-container.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .form-container h2 {
+        color: #44286b;
+        font-weight: 700;
+        margin-bottom: 10px;
+        text-align: center;
+    }
+
+    .form-container p {
+        color: #666;
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .form-group {
+        margin-bottom: 25px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        color: #44286b;
+        font-weight: 600;
+        font-size: 0.95rem;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: #44286b;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .form-group textarea {
+        resize: vertical;
+        min-height: 140px;
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    .submit-btn {
+        background: linear-gradient(135deg, #44286b 0%, #764ba2 100%);
+        color: white;
+        padding: 14px 40px;
+        border: none;
+        border-radius: 50px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+    }
+
+    .submit-btn:active {
+        transform: translateY(0);
+    }
+
+    /* Team Section */
+    .team-section {
+        padding: 80px 0;
+    }
+
+    .team-section h2 {
+        color: #44286b;
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 50px;
+    }
+
+    .team-member {
+        text-align: center;
+        opacity: 0;
+        transform: translateY(40px);
+        transition: all 1s ease;
+    }
+
+    .team-member.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .team-avatar {
+        width: 140px;
+        height: 140px;
+        margin: 0 auto 20px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #44286b 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        color: white;
+        font-weight: 700;
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.2);
+    }
+
+    .team-member h5 {
+        color: #44286b;
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+
+    .team-member .role {
+        color: #522c88ff;
+        font-weight: 600;
+        margin-bottom: 10px;
+        font-size: 0.9rem;
+    }
+
+    .team-member p {
+        color: #666;
+        font-size: 0.9rem;
+        margin-bottom: 15px;
+    }
+
+    .social-links {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+    }
+
+    .social-link {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        background: #f0f0f0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #3d2461ff;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .social-link:hover {
+        background: linear-gradient(135deg, #44286b 0%, #764ba2 100%);
+        color: white;
+        transform: translateY(-3px);
+    }
+
+    /* FAQ Section */
+    .faq-section {
+        background: #f8f9fa;
+        padding: 80px 0;
+        margin: 60px 0;
+    }
+
+    .faq-section h2 {
+        color: #44286b;
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 50px;
+    }
+
+    .accordion-item {
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        transition: all 0.3s ease;
+    }
+
+    .accordion-item:hover {
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    }
+
+    .accordion-button {
+        background: white;
+        color: #44286b;
+        font-weight: 600;
+        padding: 20px;
+        border: none;
+        border-radius: 10px;
+    }
+
+    .accordion-button:not(.collapsed) {
+        background: linear-gradient(135deg, #44286b 0%, #764ba2 100%);
+        color: white;
+        box-shadow: none;
+    }
+
+    .accordion-body {
+        padding: 20px;
+        color: #666;
+        background: white;
+    }
+
+    /* Animations */
+    @keyframes fadeInDown {
+        from { opacity: 0; transform: translateY(-40px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(40px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+
+        .contact-hero h1 {
+            font-size: 2.5rem;
+        }
+
+        .form-container {
+            padding: 30px;
+        }
+
+        .contact-info-card {
+            margin: 15px 0;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="contact-hero">
+    <div class="contact-hero-content">
+        <h1>Get in Touch</h1>
+        <p>Have questions about KhEC Event Flow? We're here to help! Reach out to us through any of these channels.</p>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Contact Info Cards -->
+    <div class="row section-split">
+        <div class="col-md-4">
+            <div class="contact-info-card">
+                <div class="contact-info-icon">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <h5>Email Support</h5>
+                <p>
+                    <a href="mailto:support@khec.edu.np">support@khec.edu.np</a>
+                </p>
+                <p style="font-size: 0.85rem; color: #999; margin-top: 10px;">We respond within 24 hours</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="contact-info-card">
+                <div class="contact-info-icon">
+                    <i class="fas fa-phone"></i>
+                </div>
+                <h5>Phone Support</h5>
+                <p>
+                    <a href="tel:+97701661101">(+977) 01-6611011</a>
+                </p>
+                <p style="font-size: 0.85rem; color: #999; margin-top: 10px;">Mon-Fri 9:00 AM - 5:00 PM</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="contact-info-card">
+                <div class="contact-info-icon">
+                    <i class="fas fa-map-marker-alt"></i>
+                </div>
+                <h5>Visit Us</h5>
+                <p>Libali, Bhaktapur<br>Khwopa Engineering College</p>
+                <p style="font-size: 0.85rem; color: #999; margin-top: 10px;">Campus Location</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Form Section -->
+    <div class="contact-form-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <div class="form-container">
+                        <h2>Send us a Message</h2>
+                        <p>Fill out the form below and we'll get back to you as soon as possible.</p>
+
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+
+                        <form method="POST">
+                            {% csrf_token %}
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="name">Full Name *</label>
+                                    <input type="text" id="name" name="name" required placeholder="Your name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email Address *</label>
+                                    <input type="email" id="email" name="email" required placeholder="your@email.com">
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="subject">Subject *</label>
+                                    <input type="text" id="subject" name="subject" required placeholder="Message subject">
+                                </div>
+                                <div class="form-group">
+                                    <label for="contact_type">Contact Type *</label>
+                                    <select id="contact_type" name="contact_type" required>
+                                        <option value="">Select type</option>
+                                        <option value="general">General Inquiry</option>
+                                        <option value="technical">Technical Support</option>
+                                        <option value="feature">Feature Request</option>
+                                        <option value="bug">Bug Report</option>
+                                        <option value="feedback">Feedback</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="message">Message *</label>
+                                <textarea id="message" name="message" required placeholder="Tell us more about your inquiry..."></textarea>
+                            </div>
+
+                            <button type="submit" class="submit-btn">Send Message</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Team Section -->
+<div class="container">
+    <div class="team-section">
+        <h2>Meet Our Development Team</h2>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="team-member">
+                    <div class="team-avatar">SD</div>
+                    <h5>Shronal Duwal</h5>
+                    <div class="role">Lead Developer & System Architect</div>
+                    <p>Computer Engineering student specializing in Django and full-stack development.</p>
+                    <div class="social-links">
+                        <a href="https://github.com" class="social-link" title="GitHub">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="https://linkedin.com" class="social-link" title="LinkedIn">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="mailto:rajesh.hamal@khec.edu.np" class="social-link" title="Email">
+                            <i class="fas fa-envelope"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="team-member">
+                    <div class="team-avatar">PS</div>
+                    <h5>Subekshya Karki</h5>
+                    <div class="role">Frontend Developer & UI/UX Designer</div>
+                    <p>Computer Engineering student focused on creating intuitive user interfaces.</p>
+                    <div class="social-links">
+                        <a href="https://github.com" class="social-link" title="GitHub">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="https://linkedin.com" class="social-link" title="LinkedIn">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="mailto:priya.sharma@khec.edu.np" class="social-link" title="Email">
+                            <i class="fas fa-envelope"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="team-member">
+                    <div class="team-avatar">AT</div>
+                    <h5>Srijan Dhukuchhu</h5>
+                    <div class="role">Backend Developer & Database Specialist</div>
+                    <p>Computer Engineering student specializing in backend systems and databases.</p>
+                    <div class="social-links">
+                        <a href="https://github.com" class="social-link" title="GitHub">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="https://linkedin.com" class="social-link" title="LinkedIn">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="mailto:amit.thapa@khec.edu.np" class="social-link" title="Email">
+                            <i class="fas fa-envelope"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FAQ Section -->
+<div class="faq-section">
+    <div class="container">
+        <h2>Frequently Asked Questions</h2>
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="accordion" id="faqAccordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                                How do I create an account?
+                            </button>
+                        </h2>
+                        <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                You can create an account by clicking the "Sign Up" button on the homepage. Fill in your details, verify your email, and you're ready to start discovering events at KhEC!
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                                How do I register for an event?
+                            </button>
+                        </h2>
+                        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Browse available events, click on the event you're interested in, and click "Register". You'll receive a confirmation email with all event details.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                                Can I cancel my registration?
+                            </button>
+                        </h2>
+                        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Yes, you can cancel your registration from the event page or your "My Registrations" section. Cancellations are allowed up to 24 hours before the event.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                                How do I create an event?
+                            </button>
+                        </h2>
+                        <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                If you're an event organizer, log in and click "Create Event". Fill in the event details, set up registration, and submit for admin approval. Once approved, your event will be live!
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
+                                What is the QR code check-in?
+                            </button>
+                        </h2>
+                        <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Organizers can use QR code check-in to quickly verify attendee attendance at events. Simply scan the QR code on your phone at the event venue.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq6">
+                                Is my data safe on KhEC Event Flow?
+                            </button>
+                        </h2>
+                        <div id="faq6" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Yes, we take data security seriously. Your personal information is encrypted and stored securely. We comply with privacy regulations and never share your data with third parties.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Scroll Animations -->
+<script>
+    // Scroll animations
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('show');
+            }
+        });
+    }, { threshold: 0.2 });
+
+    document.querySelectorAll('.section-split, .team-member, .form-container').forEach(el => {
+        observer.observe(el);
+    });
+</script>
+{% endblock %}
