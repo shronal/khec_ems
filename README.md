@@ -11,7 +11,7 @@ The **KHEC Event Management System** is a web-based platform designed to simplif
 - **Framework:** Django (Python)  
 - **Frontend:** HTML / CSS / JavaScript / Bootstrap  
 - **Database:** PostgreSQL *(or SQLite during development)*  
-- **Tools:** Git, VS Code
+- **Tools:** Git, GitHub, VS Code
 
 ---
 
