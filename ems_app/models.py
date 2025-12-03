@@ -70,6 +70,8 @@ class Event(models.Model):
     description = models.TextField()
     short_description = models.CharField(max_length=300, blank=True)
     category = models.ForeignKey('EventCategory', on_delete=models.CASCADE, related_name='events')
+    registration_deadline = models.DateField()
+    
     from django.conf import settings
 
     organizer = models.ForeignKey(

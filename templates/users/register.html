@@ -5,143 +5,83 @@
 
 {% block extra_css %}
 <style>
-    body {
-        background-color: #f5f6fa;
-    }
-
-    .login-wrapper {
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-    }
-
-    .login-form-section {
-        background: white;
-        padding: 25px;
-        border-radius: 8px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-    }
-
-    .login-form-section h3 {
-        font-size: 1.4rem;
-        margin-bottom: 10px;
-    }
-
-    .login-form-section p {
-        margin-bottom: 15px;
-        font-size: 0.9rem;
-    }
-
-    .form-control:focus {
-        border-color: #44286b;
-        box-shadow: 0 0 0 0.2rem rgba(68, 40, 107, 0.2);
-    }
-
-    .btn-login {
-        background-color: #44286b;
-        color: white;
-        font-weight: 600;
-        border: none;
-        padding: 0.55rem;
-    }
-
-    .btn-login:hover {
-        background-color: #301d4e;
-    }
-
-    a {
-        color: #44286b;
-        text-decoration: none;
-        font-weight: 500;
-    }
-
-    .login-image-section {
-        text-align: center;
-        padding: 20px;
-    }
-
-    .login-image-section img {
-        max-width: 100%;
-        height: auto;
-    }
-
-    .login-illustration-title {
-        font-size: 20px;
-        color: #44286b;
-        font-weight: 600;
-    }
-
-    .login-illustration-text {
-        color: #555;
-        font-size: 13px;
-    }
-
-    /* Password strength bar */
-    #password-strength {
-        height: 6px;
-        margin-top: 2px;
-    }
+    body { background-color: #f5f6fa; }
+    .login-wrapper { min-height: 100vh; display: flex; align-items: center; }
+    .login-form-section { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+    .login-form-section h3 { font-size: 1.4rem; margin-bottom: 10px; }
+    .login-form-section p { margin-bottom: 15px; font-size: 0.9rem; }
+    .form-control:focus { border-color: #44286b; box-shadow: 0 0 0 0.2rem rgba(68, 40, 107, 0.2); }
+    .btn-login { background-color: #44286b; color: white; font-weight: 600; border: none; padding: 0.55rem; }
+    .btn-login:hover { background-color: #301d4e; }
+    a { color: #44286b; text-decoration: none; font-weight: 500; }
+    .login-image-section { text-align: center; padding: 20px; }
+    .login-image-section img { max-width: 100%; height: auto; }
+    .login-illustration-title { font-size: 20px; color: #44286b; font-weight: 600; }
+    .login-illustration-text { color: #555; font-size: 13px; }
+    #password-strength { height: 6px; margin-top: 2px; }
+    .error-msg { color: red; font-size: 0.85rem; margin-top: 5px; }
+    .required { color: red; }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="container login-wrapper">
     <div class="row w-100">
-        <!-- Registration Form -->
         <div class="col-lg-6 d-flex justify-content-center align-items-center">
             <div class="login-form-section w-100" style="max-width: 450px;">
                 <h3 class="mb-2 text-dark fw-bold">Create Account</h3>
                 <p class="mb-3 text-muted">Join KhEC Event Flow and get started.</p>
 
-                <form method="POST" novalidate>
+                <form method="POST" novalidate id="registerForm">
                     {% csrf_token %}
-                    
+
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            {{ form.first_name.label_tag }}
+                            {{ form.first_name.label_tag }} <span class="required">*</span>
                             {{ form.first_name }}
                         </div>
                         <div class="col-md-6 mb-3">
-                            {{ form.last_name.label_tag }}
+                            {{ form.last_name.label_tag }} <span class="required">*</span>
                             {{ form.last_name }}
                         </div>
                     </div>
 
                     <div class="mb-3">
-                        {{ form.username.label_tag }}
+                        {{ form.username.label_tag }} <span class="required">*</span>
                         {{ form.username }}
                     </div>
 
                     <div class="mb-3">
-                        {{ form.email.label_tag }}
+                        {{ form.email.label_tag }} <span class="required">*</span>
                         {{ form.email }}
                     </div>
 
                     <div class="mb-3">
-                        {{ form.phone_number.label_tag }}
+                        {{ form.phone_number.label_tag }} <span class="required">*</span>
                         {{ form.phone_number }}
                     </div>
 
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            {{ form.password1.label_tag }}
+                            {{ form.password1.label_tag }} <span class="required">*</span>
                             {{ form.password1 }}
                         </div>
                         <div class="col-md-6 mb-3">
-                            {{ form.password2.label_tag }}
+                            {{ form.password2.label_tag }} <span class="required">*</span>
                             {{ form.password2 }}
                         </div>
                     </div>
 
-                    <!-- Password strength indicator -->
                     <div id="password-strength" class="progress d-none mb-3">
                         <div class="progress-bar" role="progressbar"></div>
                     </div>
 
                     <div class="mb-3">
-                        {{ form.user_type.label_tag }}
+                        {{ form.user_type.label_tag }} <span class="required">*</span>
                         {{ form.user_type }}
                     </div>
+
+                    <div class="error-msg" id="formError"></div>
 
                     <div class="d-grid mb-2">
                         <button type="submit" class="btn btn-login">
@@ -157,7 +97,7 @@
                 </form>
             </div>
         </div>
-        <!-- Illustration Section -->
+
         <div class="col-lg-6 d-none d-lg-flex align-items-center justify-content-center login-image-section">
             <div>
                 <img src="{% static 'images/login.png' %}" alt="Register illustration" />
@@ -169,7 +109,6 @@
         </div>
     </div>
 </div>
-
 <br>
 {% endblock %}
 
@@ -184,7 +123,6 @@
         passwordInput.addEventListener("input", function() {
             const val = passwordInput.value;
             let strength = 0;
-
             if (val.length >= 8) strength += 25;
             if (/[A-Z]/.test(val)) strength += 25;
             if (/[0-9]/.test(val)) strength += 25;
@@ -206,5 +144,38 @@
             }
         });
     }
+
+    // Client-side validation example
+    const form = document.getElementById("registerForm");
+    const errorDiv = document.getElementById("formError");
+
+    form.addEventListener("submit", function(e) {
+        errorDiv.innerText = "";
+
+        // Example: check for empty fields
+        const username = document.getElementById("id_username").value.trim();
+        const password1 = document.getElementById("id_password1").value;
+        const password2 = document.getElementById("id_password2").value;
+
+        if (!username || !password1 || !password2) {
+            e.preventDefault();
+            errorDiv.innerText = "Please fill all mandatory fields (*)";
+            return;
+        }
+
+        if (password1 !== password2) {
+            e.preventDefault();
+            errorDiv.innerText = "Passwords do not match";
+            return;
+        }
+
+        // Placeholder: check if user exists (you need to handle this in backend)
+        const existingUsers = ["existinguser1", "testuser"]; // Example only
+        if (existingUsers.includes(username)) {
+            e.preventDefault();
+            errorDiv.innerText = "User already exists";
+            return;
+        }
+    });
 </script>
 {% endblock %}
