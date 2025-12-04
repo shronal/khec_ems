@@ -11,6 +11,7 @@ urlpatterns = [
     path('events/', include('ems_app.urls')), 
     path("", include("ems_app.urls")), 
     path('users/', include('users.urls')),
+    
      # Password reset links
     path('password_reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),
     path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),

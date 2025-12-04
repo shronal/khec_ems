@@ -712,6 +712,7 @@ def check_overlap(request):
     return JsonResponse({"overlap": overlap})
 
 
+<<<<<<< HEAD
 @login_required
 def user_registrations(request):
     # Get all events the user is registered for
@@ -820,3 +821,268 @@ def event_approval_view(request, slug):
         'form': form,
     }
     return render(request, 'admin/event_approval.html', context)
+=======
+
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib import messages
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.conf import settings
+
+from ems_app.models import Event
+
+def approve_event(request,slug ):
+    event = get_object_or_404(Event, id=slug)
+
+    # update status
+    event.status = "approved"
+    event.save()
+
+    # Prepare email
+    subject = "Your Event Has Been Approved"
+    html_content = render_to_string("email/approval_email.html", {
+        "username": event.organizer.username,
+        "title": event.title,
+        "date": event.event_date,
+    })
+
+    email = EmailMultiAlternatives(
+        subject,
+        "",  # plain text version (optional)
+        settings.DEFAULT_FROM_EMAIL,
+        [event.organizer.email],
+    )
+    email.attach_alternative(html_content, "text/html")
+    email.send()
+
+    messages.success(request, "Event approved. Email sent.")
+    return redirect("event_detail", pk=slug)
+
+
+def reject_event(request, slug):
+    event = get_object_or_404(Event, id=slug)
+
+    event.status = "rejected"
+    event.save()
+
+    subject = "Your Event Has Been Rejected"
+    html_content = render_to_string("email/rejection_email.html", {
+        "username": event.organizer.username,
+        "title": event.title,
+    })
+
+    email = EmailMultiAlternatives(
+        subject,
+        "",
+        settings.DEFAULT_FROM_EMAIL,
+        [event.organizer.email],
+    )
+    email.attach_alternative(html_content, "text/html")
+    email.send()
+
+    messages.warning(request, "Event rejected. Email sent.")
+    return redirect("event_detail", pk=slug)
+
+
+
+
+
+
+@login_required
+def event_register(request, slug):
+    event = get_object_or_404(Event, slug=slug)
+    form = EventRegistrationForm(request.POST or None)
+
+    if request.method == "POST" and event.registration_fee > 0:
+        # PAID EVENT -> save session then redirect
+        if form.is_valid():
+           request.session[f'event_{slug}_data'] = {
+    'notes': form.cleaned_data['notes'],
+    'emergency_contact': form.cleaned_data['emergency_contact'],
+    'dietary_requirements': form.cleaned_data['dietary_requirements'],
+    'total_price': float(event.registration_fee),  # convert to float
+}
+
+        return redirect('show_payment', slug=slug)
+
+    elif request.method == "POST" and event.registration_fee == 0:
+        # FREE EVENT -> Save into DB
+        if form.is_valid():
+            Registration.objects.create(
+                event=event,
+                user=request.user,
+                notes=form.cleaned_data['notes'],
+                emergency_contact=form.cleaned_data['emergency_contact'],
+                dietary_requirements=form.cleaned_data['dietary_requirements'],
+            )
+            messages.success(request, "You have successfully registered for this event!")
+            return redirect('event-detail', slug=slug)
+
+    return render(request, "events/event_register.html", {
+        "event": event,
+        "form": form
+    })
+
+
+
+
+from django.shortcuts import get_object_or_404, redirect, HttpResponse, render
+from django.urls import reverse
+from django.conf import settings
+from .models import Event, EventRegistration
+from uuid import uuid4
+import hmac, hashlib, base64
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.db import IntegrityError
+import json
+
+def esewa_v2_generate_signature(message_str: str, secret_key: str) -> str:
+    secret_bytes = secret_key.encode('utf-8')
+    msg_bytes = message_str.encode('utf-8')
+    sig = hmac.new(secret_bytes, msg_bytes, hashlib.sha256).digest()
+    return base64.b64encode(sig).decode('utf-8')
+
+
+@login_required
+def event_register(request, slug):
+    event = get_object_or_404(Event, slug=slug)
+    form = EventRegistrationForm(request.POST or None)
+
+    if request.method == "POST" and event.registration_fee > 0:
+        # PAID EVENT -> save session then redirect to eSewa
+        if form.is_valid():
+            request.session[f'event_{slug}_data'] = {
+                'notes': form.cleaned_data['notes'],
+                'emergency_contact': form.cleaned_data['emergency_contact'],
+                'dietary_requirements': form.cleaned_data['dietary_requirements'],
+                'total_price': float(event.registration_fee),  # convert Decimal -> float
+            }
+            return redirect('show_payment', slug=slug)
+
+    elif request.method == "POST" and event.registration_fee == 0:
+    # FREE EVENT -> save directly to EventRegistration, avoid duplicates
+        if form.is_valid():
+            registration, created = EventRegistration.objects.get_or_create(
+            event=event,
+            participant=request.user,
+            defaults={
+                'status': 'confirmed',
+                'notes': form.cleaned_data['notes'],
+                'emergency_contact': form.cleaned_data['emergency_contact'],
+                'dietary_requirements': form.cleaned_data['dietary_requirements'],
+            }
+        )
+        if not created:
+            # If registration exists (maybe cancelled), update it
+            registration.status = 'confirmed'
+            registration.notes = form.cleaned_data['notes']
+            registration.emergency_contact = form.cleaned_data['emergency_contact']
+            registration.dietary_requirements = form.cleaned_data['dietary_requirements']
+            registration.save()
+
+        messages.success(request, "You have successfully registered for this event!")
+        return redirect('event-detail', slug=slug)
+
+
+    return render(request, "events/event_register.html", {
+        "event": event,
+        "form": form
+    })
+
+
+@login_required
+def show_payment(request, slug):
+    event = get_object_or_404(Event, slug=slug)
+    data = request.session.get(f'event_{slug}_data')
+    if not data:
+        return redirect('event-register', slug=slug)
+
+    total_amount = str(data['total_price'])
+    transaction_uuid = str(uuid4())
+    product_code = settings.ESEWA_MERCHANT_ID
+    secret_key = settings.ESEWA_SECRET_KEY
+
+    signature = esewa_v2_generate_signature(
+        f"total_amount={total_amount},transaction_uuid={transaction_uuid},product_code={product_code}",
+        secret_key
+    )
+
+    request.session['esewaverify'] = {
+        'transaction_uuid': transaction_uuid,
+        'total_amount': total_amount,
+        'slug': slug,
+        'notes': data['notes'],
+        'emergency_contact': data['emergency_contact'],
+        'dietary_requirements': data['dietary_requirements'],
+    }
+
+    # Auto-submit form directly to eSewa
+    form_html = f"""
+    <html>
+        <body onload="document.forms['esewa_form'].submit();">
+            <form name="esewa_form" method="POST" action="{settings.ESEWA_V2_PAYMENT_URL}">
+                <input type="hidden" name="amount" value="{total_amount}">
+                <input type="hidden" name="tax_amount" value="0">
+                <input type="hidden" name="product_delivery_charge" value="0">
+                <input type="hidden" name="product_service_charge" value="0">
+                <input type="hidden" name="total_amount" value="{total_amount}">
+                <input type="hidden" name="transaction_uuid" value="{transaction_uuid}">
+                <input type="hidden" name="product_code" value="{product_code}">
+                <input type="hidden" name="success_url" value="{request.build_absolute_uri(reverse('esewa-success', kwargs={'slug': slug}))}">
+                <input type="hidden" name="failure_url" value="{request.build_absolute_uri(reverse('esewa-cancel', kwargs={'slug': slug}))}">
+                <input type="hidden" name="signed_field_names" value="total_amount,transaction_uuid,product_code">
+                <input type="hidden" name="signature" value="{signature}">
+            </form>
+            <p>Redirecting to eSewa payment page...</p>
+        </body>
+    </html>
+    """
+    return HttpResponse(form_html)
+
+
+@login_required
+def esewa_success(request, slug):
+    event = get_object_or_404(Event, slug=slug)
+    esv = request.session.get('esewaverify')
+    if not esv or esv.get('slug') != slug:
+        messages.error(request, "Payment verification failed.")
+        return redirect('event-register', slug=slug)
+
+    # Create or update EventRegistration after successful payment
+    try:
+        registration, created = EventRegistration.objects.get_or_create(
+            event=event,
+            participant=request.user,
+            defaults={
+                'status': 'confirmed',
+                'notes': esv.get('notes', "Paid via eSewa"),
+                'emergency_contact': esv.get('emergency_contact', ""),
+                'dietary_requirements': esv.get('dietary_requirements', "")
+            }
+        )
+        if not created:
+            registration.status = 'confirmed'
+            registration.notes = esv.get('notes', "Paid via eSewa")
+            registration.emergency_contact = esv.get('emergency_contact', "")
+            registration.dietary_requirements = esv.get('dietary_requirements', "")
+            registration.save()
+    except IntegrityError:
+        registration = EventRegistration.objects.get(event=event, participant=request.user)
+        registration.status = 'confirmed'
+        registration.notes = esv.get('notes', "Paid via eSewa")
+        registration.save()
+
+    messages.success(request, f"You have successfully registered for {event.title}!")
+    return redirect('event-detail', slug=slug)
+
+
+@login_required
+def property_cancel(request, slug):
+    event = get_object_or_404(Event, slug=slug)
+    return render(request, "payfail.html", {'event': event})
+
+
+
+
+>>>>>>> 33326dd922bf6304c1d8adfd62434657f779e923
