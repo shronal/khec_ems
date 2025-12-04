@@ -710,3 +710,113 @@ def check_overlap(request):
     ).exists()
 
     return JsonResponse({"overlap": overlap})
+
+
+@login_required
+def user_registrations(request):
+    # Get all events the user is registered for
+    registrations = EventRegistration.objects.filter(participant=request.user).order_by('-registration_date')
+
+    context = {
+        'registrations': registrations,
+    }
+
+    return render(request, 'events/user_registrations.html', context)
+
+def send_event_approval_email(event, is_approved=True, rejection_reason=None):
+    """Send email notification to organizer about event approval/rejection"""
+    try:
+        subject = f"Event {event.title} - {'Approved' if is_approved else 'Rejected'}"
+        
+        if is_approved:
+            message = f"""
+Hello {event.organizer.get_full_name() or event.organizer.username},
+
+We are happy to inform you that your event "{event.title}" has been APPROVED!
+
+Event Details:
+- Title: {event.title}
+- Date: {event.start_date.strftime('%B %d, %Y at %I:%M %p')}
+- Location: {event.location}
+- Category: {event.category.name}
+- Maximum Participants: {event.max_participants if event.max_participants > 0 else 'Unlimited'}
+
+Your event is now live and visible to participants. You can manage registrations from your organizer dashboard.
+
+Best regards,
+KhEC Event Management System
+"""
+        else:
+            message = f"""
+Hello {event.organizer.get_full_name() or event.organizer.username},
+
+Thank you for submitting your event "{event.title}". Unfortunately, we are unable to approve it at this time.
+
+Event Details:
+- Title: {event.title}
+- Date: {event.start_date.strftime('%B %d, %Y at %I:%M %p')}
+- Location: {event.location}
+- Category: {event.category.name}
+
+Reason for Rejection:
+{rejection_reason or 'Please review the event details and resubmit.'}
+
+You can edit and resubmit your event from your organizer dashboard. If you have any questions, please contact us.
+
+Best regards,
+KhEC Event Management System
+"""
+        
+        send_mail(
+            subject,
+            message,
+            settings.DEFAULT_FROM_EMAIL,
+            [event.organizer.email],
+            fail_silently=False,
+        )
+        return True
+    except Exception as e:
+        print(f"Error sending event approval email: {str(e)}")
+        return False
+
+
+@login_required
+def event_approval_view(request, slug):
+    """
+    Admin view to approve or reject an event.
+    """
+    if not request.user.is_admin_user():
+        messages.error(request, 'You do not have permission to access this page.')
+        return redirect('home')
+
+    event = get_object_or_404(Event, slug=slug)
+
+    if request.method == 'POST':
+        form = EventApprovalForm(request.POST, instance=event)
+        if form.is_valid():
+            new_status = form.cleaned_data['status']
+            rejection_reason = request.POST.get('rejection_reason', '').strip()
+            
+            if new_status == 'approved':
+                event.status = 'approved'
+                event.approved_at = timezone.now()
+                send_event_approval_email(event, is_approved=True)
+                messages.success(request, f'Event "{event.title}" has been approved. Notification email sent to {event.organizer.email}.')
+            elif new_status == 'rejected':
+                event.status = 'rejected'
+                event.approved_at = None
+                send_event_approval_email(event, is_approved=False, rejection_reason=rejection_reason)
+                messages.success(request, f'Event "{event.title}" has been rejected. Notification email sent to {event.organizer.email}.')
+            
+            event.save()
+            return redirect('admin-dashboard')
+        else:
+            messages.error(request, 'There was an error with your submission.')
+    else:
+        form = EventApprovalForm(instance=event)
+
+    context = {
+        'event': event,
+        'form': form,
+    }
+    return render(request, 'admin/event_approval.html', context)
