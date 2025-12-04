@@ -968,9 +968,10 @@ def esewa_success(request, slug):
 
 
 @login_required
-def property_cancel(request, slug):
-    event = get_object_or_404(Event, slug=slug)
-    return render(request, "payfail.html", {'event': event})
+def esewa_cancel(request, slug):
+    # Redirect to the event registration page instead of showing payfail
+    return redirect('event-register', slug=slug)
+
 
 
 
