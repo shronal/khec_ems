@@ -56,7 +56,7 @@ urlpatterns = [
     path('event/<slug:slug>/register/', views.event_register, name='event-register'),
     path('event/<slug:slug>/esewa/payment/', views.show_payment, name='show_payment'),
     path('event/<slug:slug>/esewa/success/', views.esewa_success, name='esewa-success'),
-    path('event/<slug:slug>/esewa/cancel/', views.property_cancel, name='esewa-cancel'),
+    path('event/<slug:slug>/esewa/cancel/', views.esewa_cancel, name='esewa-cancel'),
 
 
     path("api/check_overlap/", views.check_overlap, name="check_overlap"),
