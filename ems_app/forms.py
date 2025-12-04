@@ -32,20 +32,19 @@ class EventForm(forms.ModelForm):
             'registration_fee': forms.NumberInput(attrs={'step': '0.01', 'class': 'form-control'}),
             'meta_description': forms.Textarea(attrs={'rows': 2, 'class': 'form-control'}),
             'meta_keywords': forms.TextInput(attrs={'class': 'form-control'}),
+            'category': forms.Select(attrs={'class': 'form-control'}),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        # Set active categories in dropdown
-        self.fields['category'].queryset = EventCategory.objects.filter(is_active=True)
-
+        # Ensure category queryset is set properly
+        self.fields['category'].queryset = EventCategory.objects.filter(is_active=True).order_by('name')
+        
         for field_name, field in self.fields.items():
             if field_name not in ['featured_image', 'banner_image', 'is_free', 'is_featured']:
-                field.widget.attrs['class'] = 'form-control'
+                if 'class' not in field.widget.attrs:
+                    field.widget.attrs['class'] = 'form-control'
 
-
-    
     def clean(self):
         cleaned_data = super().clean()
         start_date = cleaned_data.get('start_date')
@@ -86,7 +85,7 @@ class EventSearchForm(forms.Form):
         ('registration_deadline', 'Registration Deadline'),
         ('-view_count', 'Most Popular'),
     )
-    
+
     DATE_FILTER_CHOICES = (
         ('all', 'All Events'),
         ('upcoming', 'Upcoming Events'),
@@ -94,7 +93,7 @@ class EventSearchForm(forms.Form):
         ('this_month', 'This Month'),
         ('past', 'Past Events'),
     )
-    
+
     q = forms.CharField(
         max_length=255, 
         required=False,
@@ -178,7 +177,7 @@ class EventTemplateForm(forms.ModelForm):
         widgets = {
             'description': forms.Textarea(attrs={'rows': 4, 'class': 'form-control'}),
         }
-    
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
@@ -191,10 +190,10 @@ class EventApprovalForm(forms.ModelForm):
         widget=forms.Textarea(attrs={
             'rows': 3, 
             'class': 'form-control',
-            'placeholder': 'Reason for rejection (optional)'
+            'placeholder': 'Reason for rejection (optional) - This will be sent to the organizer'
         })
     )
-    
+
     class Meta:
         model = Event
         fields = ['status']
@@ -209,7 +208,7 @@ class BulkActionForm(forms.Form):
         ('delete', 'Delete Selected'),
         ('export', 'Export Selected'),
     )
-    
+
     action = forms.ChoiceField(choices=ACTION_CHOICES, widget=forms.Select(attrs={'class': 'form-select'}))
     selected_events = forms.CharField(widget=forms.HiddenInput())
 
@@ -230,11 +229,11 @@ class CheckInForm(forms.Form):
             'placeholder': 'Enter participant username'
         })
     )
-    
+
     def __init__(self, event, *args, **kwargs):
         self.event = event
         super().__init__(*args, **kwargs)
-    
+
     def clean_participant_username(self):
         username = self.cleaned_data['participant_username']
         try:
@@ -255,7 +254,7 @@ class EventExportForm(forms.Form):
         ('excel', 'Excel'),
         ('pdf', 'PDF'),
     )
-    
+
     format = forms.ChoiceField(
         choices=FORMAT_CHOICES,
         widget=forms.Select(attrs={'class': 'form-select'})

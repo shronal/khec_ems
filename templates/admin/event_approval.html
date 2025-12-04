@@ -9,11 +9,11 @@
         <div class="col-lg-8">
             <!-- Event Details -->
             <div class="card mb-4">
-               {% if event.featured_image %}
-                            <img src="{{ event.featured_image.url }}" class="card-img-top" alt="{{ event.title }}" style="height: 200px; object-fit: cover;">
-                        {% else %}
-                            <img src="https://via.placeholder.com/300x200?text=Event" class="card-img-top" alt="{{ event.title }}">
-                        {% endif %}
+                {% if event.featured_image %}
+                    <img src="{{ event.featured_image.url }}" class="card-img-top" alt="{{ event.title }}" style="max-height: 400px; object-fit: cover;">
+                {% else %}
+                    <img src="https://via.placeholder.com/800x400?text=Event" class="card-img-top" alt="{{ event.title }}">
+                {% endif %}
                 <div class="card-body">
                     <h1 class="card-title">{{ event.title }}</h1>
                     
@@ -68,13 +68,30 @@
                     <h4>Event Approval</h4>
                 </div>
                 <div class="card-body">
-                    <form method="post">
+                    <form method="post" id="approval-form">
                         {% csrf_token %}
+                        
+                        <!-- Status Field -->
+                        <div class="mb-3">
+                            <label for="{{ form.status.id_for_label }}" class="form-label">Status</label>
+                            {{ form.status }}
+                            {% if form.status.errors %}
+                                <div class="text-danger mt-1">{{ form.status.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Rejection Reason Field (shown conditionally) -->
+                        <div class="mb-3" id="rejection-reason-container" style="display: none;">
+                            <label for="id_rejection_reason" class="form-label">Rejection Reason <small class="text-muted">(will be sent to organizer)</small></label>
+                            <textarea id="id_rejection_reason" name="rejection_reason" rows="3" class="form-control" placeholder="Enter reason for rejection..."></textarea>
+                            <small class="text-muted">This message will be sent to the event organizer.</small>
+                        </div>
+                        
                         <div class="d-grid gap-2 mt-3">
-                            <button type="submit" name="status" value="approved" class="btn btn-success">
+                            <button type="submit" class="btn btn-success" onclick="document.getElementById('id_status').value='approved'">
                                 <i class="fas fa-check-circle me-2"></i>Approve Event
                             </button>
-                            <button type="submit" name="status" value="rejected" class="btn btn-danger">
+                            <button type="submit" class="btn btn-danger" onclick="document.getElementById('id_status').value='rejected'">
                                 <i class="fas fa-times-circle me-2"></i>Reject Event
                             </button>
                             <a href="{% url 'admin-dashboard' %}" class="btn btn-outline-secondary">
@@ -92,7 +109,7 @@
                 </div>
                 <div class="card-body">
                     <p><strong>Name:</strong> {{ event.organizer.get_full_name|default:event.organizer.username }}</p>
-                    <p><strong>Email:</strong> {{ event.organizer.email }}</p>
+                    <p><strong>Email:</strong> <a href="mailto:{{ event.organizer.email }}">{{ event.organizer.email }}</a></p>
                     <p><strong>Phone:</strong> {{ event.organizer.phone_number|default:"Not provided" }}</p>
                     <p><strong>User Type:</strong> {{ event.organizer.get_user_type_display }}</p>
                     <p><strong>Joined:</strong> {{ event.organizer.date_joined|date:"F j, Y" }}</p>
@@ -101,4 +118,23 @@
         </div>
     </div>
 </div>
+
+<!-- JavaScript to toggle rejection reason field -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const statusSelect = document.getElementById('{{ form.status.id_for_label }}');
+    const rejectionReasonContainer = document.getElementById('rejection-reason-container');
+    
+    function toggleRejectionReason() {
+        if (statusSelect.value === 'rejected') {
+            rejectionReasonContainer.style.display = 'block';
+        } else {
+            rejectionReasonContainer.style.display = 'none';
+        }
+    }
+    
+    statusSelect.addEventListener('change', toggleRejectionReason);
+});
+</script>
+
 {% endblock %}
