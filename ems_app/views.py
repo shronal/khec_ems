@@ -723,7 +723,11 @@ def check_overlap(request):
     return JsonResponse({"overlap": overlap})
 
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
 
+>>>>>>> f46c1870c760c51530bd5ce9506b6c784bb3b780
 @login_required
 def user_registrations(request):
     # Get all events the user is registered for
@@ -832,6 +836,10 @@ def event_approval_view(request, slug):
         'form': form,
     }
     return render(request, 'admin/event_approval.html', context)
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> f46c1870c760c51530bd5ce9506b6c784bb3b780
 
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
@@ -1095,3 +1103,7 @@ def property_cancel(request, slug):
 
 
 
+<<<<<<< HEAD
+>>>>>>> 33326dd922bf6304c1d8adfd62434657f779e923
+=======
+>>>>>>> f46c1870c760c51530bd5ce9506b6c784bb3b780

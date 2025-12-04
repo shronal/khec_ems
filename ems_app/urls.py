@@ -40,6 +40,7 @@ urlpatterns = [
     path('my-registrations/', views.user_registrations, name='user-registrations'),
     
     # Admin functions
+    path('event/<slug:slug>/approval/', views.event_approval_view, name='event-approval'),
     path('event/<slug:slug>/approval/', views.event_approval, name='event-approval'),
 
 
