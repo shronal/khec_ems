@@ -13,6 +13,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.core.mail import send_mail
 from django.conf import settings
+from .models import Event
 import json
 import csv
 from datetime import datetime, timedelta
@@ -542,6 +543,16 @@ class EventCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
             'Your event has been created successfully! ' + 
             ('It is now live.' if form.instance.status == 'approved' else 'It will be reviewed by administrators.')
         )
+
+         # Send email to the user
+        send_mail(
+            subject="Event Created Successfully",
+            message=f"Hi {self.request.user.username},\n\nYour event '{form.instance.title}' has been successfully created.",
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=[self.request.user.email],  # user's email
+            fail_silently=False,
+        )
+        
         return response
 
 class EventUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
@@ -710,3 +721,4 @@ def check_overlap(request):
     ).exists()
 
     return JsonResponse({"overlap": overlap})
+
