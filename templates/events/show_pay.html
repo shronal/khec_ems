@@ -1,0 +1,8 @@
+<form action="{% url 'show_payment' slug=event.slug %}" method="POST">
+
+            {% csrf_token %}
+            {% for key, val in esewa_fields.items %}
+                <input type="hidden" name="{{ key }}" value="{{ val }}">
+            {% endfor %}
+            <button type="submit" class="esewa-btn">Pay with eSewa</button>
+        </form>

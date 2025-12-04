@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -194,5 +194,16 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'khec7903@gmail.com' 
 EMAIL_HOST_PASSWORD = 'mizqipxvjqgtaffy'  
 DEFAULT_FROM_EMAIL = 'KHEC EMS <khec7903@gmail.com>'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
+
+
+#payment
+# eSewa v2 settings
+ESEWA_MERCHANT_ID = "EPAYTEST"
+ESEWA_SECRET_KEY = "8gBm/:&EnhH.1/q"
+ESEWA_PRODUCT_CODE = "EPAYTEST"
+
+ESEWA_V2_PAYMENT_URL = "https://rc-epay.esewa.com.np/api/epay/main/v2/form"
+ESEWA_V2_VERIFY_URL = "https://rc-epay.esewa.com.np/api/epay/main/v2/verify"
 
