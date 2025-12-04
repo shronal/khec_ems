@@ -40,9 +40,6 @@ urlpatterns = [
     path('my-registrations/', views.user_registrations, name='user-registrations'),
     
     # Admin functions
-<<<<<<< HEAD
-    path('event/<slug:slug>/approval/', views.event_approval_view, name='event-approval'),
-=======
     path('event/<slug:slug>/approval/', views.event_approval, name='event-approval'),
 
 
@@ -61,7 +58,6 @@ urlpatterns = [
     path('event/<slug:slug>/esewa/cancel/', views.property_cancel, name='esewa-cancel'),
 
 
->>>>>>> origin/ps
     path("api/check_overlap/", views.check_overlap, name="check_overlap"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
