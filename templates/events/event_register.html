@@ -12,6 +12,7 @@
                     <h2>Register for Event</h2>
                 </div>
                 <div class="card-body">
+
                     <!-- Event Summary -->
                     <div class="alert alert-info">
                         <h5><i class="fas fa-calendar-alt me-2"></i>{{ event.title }}</h5>
@@ -19,54 +20,104 @@
                         <p class="mb-1"><i class="fas fa-clock me-2"></i>{{ event.start_date|date:"F j, Y g:i A" }} - {{ event.end_date|date:"g:i A" }}</p>
                         <p class="mb-0"><i class="fas fa-user me-2"></i>Organized by {{ event.organizer.get_full_name|default:event.organizer.username }}</p>
                     </div>
-                    
-                    <!-- Registration Form -->
-                    <form method="post">
+
+                    {% if event.registration_fee > 0 %}
+                    <!-- PAID EVENT: SINGLE FORM -->
+                    <form action="{% url 'event-register' slug=event.slug %}" method="POST">
                         {% csrf_token %}
-                        
+
                         <div class="mb-3">
                             <label for="{{ form.notes.id_for_label }}" class="form-label">{{ form.notes.label }}</label>
                             {{ form.notes }}
                             {% if form.notes.errors %}
-                                <div class="text-danger">{{ form.notes.errors }}</div>
+                            <div class="text-danger">{{ form.notes.errors }}</div>
                             {% endif %}
                             <div class="form-text">Any additional notes or comments (optional)</div>
                         </div>
-                        
+
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="{{ form.emergency_contact.id_for_label }}" class="form-label">{{ form.emergency_contact.label }}</label>
                                 {{ form.emergency_contact }}
                                 {% if form.emergency_contact.errors %}
-                                    <div class="text-danger">{{ form.emergency_contact.errors }}</div>
+                                <div class="text-danger">{{ form.emergency_contact.errors }}</div>
                                 {% endif %}
                                 <div class="form-text">Emergency contact number (optional)</div>
                             </div>
+
                             <div class="col-md-6 mb-3">
                                 <label for="{{ form.dietary_requirements.id_for_label }}" class="form-label">{{ form.dietary_requirements.label }}</label>
                                 {{ form.dietary_requirements }}
                                 {% if form.dietary_requirements.errors %}
-                                    <div class="text-danger">{{ form.dietary_requirements.errors }}</div>
+                                <div class="text-danger">{{ form.dietary_requirements.errors }}</div>
                                 {% endif %}
                                 <div class="form-text">Any dietary restrictions (optional)</div>
                             </div>
                         </div>
-                        
-                        <!-- Terms and Conditions -->
+
+                        <!-- Terms -->
                         <div class="mb-3 form-check">
                             <input type="checkbox" class="form-check-input" id="agreeTerms" required>
                             <label class="form-check-label" for="agreeTerms">
                                 I agree to attend this event and understand the terms and conditions
                             </label>
                         </div>
-                        
+
+                        <button type="submit" class="btn btn-success w-100">
+                            Proceed to Pay with eSewa
+                        </button>
+                    </form>
+
+                    {% else %}
+                    <!-- FREE EVENT REGISTRATION FORM -->
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label for="{{ form.notes.id_for_label }}" class="form-label">{{ form.notes.label }}</label>
+                            {{ form.notes }}
+                            {% if form.notes.errors %}
+                            <div class="text-danger">{{ form.notes.errors }}</div>
+                            {% endif %}
+                            <div class="form-text">Any additional notes or comments (optional)</div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.emergency_contact.id_for_label }}" class="form-label">{{ form.emergency_contact.label }}</label>
+                                {{ form.emergency_contact }}
+                                {% if form.emergency_contact.errors %}
+                                <div class="text-danger">{{ form.emergency_contact.errors }}</div>
+                                {% endif %}
+                                <div class="form-text">Emergency contact number (optional)</div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.dietary_requirements.id_for_label }}" class="form-label">{{ form.dietary_requirements.label }}</label>
+                                {{ form.dietary_requirements }}
+                                {% if form.dietary_requirements.errors %}
+                                <div class="text-danger">{{ form.dietary_requirements.errors }}</div>
+                                {% endif %}
+                                <div class="form-text">Any dietary restrictions (optional)</div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="agreeTerms" required>
+                            <label class="form-check-label" for="agreeTerms">
+                                I agree to attend this event and understand the terms and conditions
+                            </label>
+                        </div>
+
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                             <a href="{% url 'event-detail' event.slug %}" class="btn btn-outline-secondary me-md-2">Cancel</a>
-        <button type="submit" class="btn btn-success">
-                    <i class="fas fa-check-circle me-2"></i>Register for Event
-        </button>
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-check-circle me-2"></i>Register for Event
+                            </button>
                         </div>
                     </form>
+                    {% endif %}
+
                 </div>
             </div>
         </div>

@@ -8,6 +8,10 @@ import uuid
 from django.core.exceptions import ValidationError
 from django.utils.text import slugify
 
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
 class EventCategory(models.Model):
     name = models.CharField(max_length=100, unique=True)
     description = models.TextField(blank=True, null=True)
@@ -77,6 +81,7 @@ class Event(models.Model):
     on_delete=models.CASCADE,
     related_name='organized_events'
 )
+    
 
     
     # Location and Time
